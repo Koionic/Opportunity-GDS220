@@ -23,13 +23,16 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] int seed;
     [SerializeField] Vector2 offset;
 
+    [SerializeField] float meshHeightMultiplier;
+    [SerializeField] AnimationCurve meshHeightCurve;
+
     public bool autoUpdate;
 
     public TerrainType[] regions;
 
     public void GenerateMap()
     {
-        float[,] noisemap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves,persistance, lacunarity, offset);
+        float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves,persistance, lacunarity, offset);
 
         Color[] colourMap = new Color[mapWidth * mapHeight];
 
@@ -37,7 +40,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < mapWidth; x++)
             {
-                float currentHeight = noisemap[x, y];
+                float currentHeight = noiseMap[x, y];
                 //loop to match the height with the corresponding region
                 for (int i = 0; i < regions.Length; i++)
                 {
@@ -54,7 +57,7 @@ public class MapGenerator : MonoBehaviour
         switch (drawMode)
         {
             case (DrawMode.NoiseMap):
-                display.DrawTexture(TextureGenerator.TextureFromHeightMap(noisemap));
+                display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
                 break;
 
             case (DrawMode.ColourMap):
@@ -62,7 +65,7 @@ public class MapGenerator : MonoBehaviour
                 break;
 
             case (DrawMode.Mesh):
-                display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noisemap), TextureGenerator.TextureFromColourMap(colourMap, mapWidth, mapHeight));
+                display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve), TextureGenerator.TextureFromColourMap(colourMap, mapWidth, mapHeight));
                 break;
         }
     }
