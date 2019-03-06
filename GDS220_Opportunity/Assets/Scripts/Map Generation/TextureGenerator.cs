@@ -16,10 +16,10 @@ public static class TextureGenerator
     }
 
     //Function that takes the 2D array of height values and visualises them with a gradient of black and white
-    public static Texture2D TextureFromHeightMap(float[,] heightMap)
+    public static Texture2D TextureFromHeightMap(HeightMap heightMap)
     {
-        int width = heightMap.GetLength(0);
-        int height = heightMap.GetLength(1);
+        int width = heightMap.values.GetLength(0);
+        int height = heightMap.values.GetLength(1);
 
         Texture2D texture = new Texture2D(width, height);
 
@@ -30,7 +30,7 @@ public static class TextureGenerator
             for (int x = 0; x < width; x++)
             {
                 //sets a colour between black and white depending on perlin noise value
-                colourMap[y * width + x] = Color.Lerp(Color.black, Color.white, heightMap[x, y]);
+                colourMap[y * width + x] = Color.Lerp(Color.black, Color.white, Mathf.InverseLerp(heightMap.minValue, heightMap.maxValue, heightMap.values[x, y]));
             }
         }
 
