@@ -5,7 +5,7 @@ using UnityEngine;
 public class TerrainChunk
 {
 
-    const float colliderGenerationDistanceThreshold = 5;
+    const float colliderGenerationDistanceThreshold = 2;
     public event System.Action<TerrainChunk, bool> onVisiblityChanged;
     public Vector2 coord;
 
@@ -46,7 +46,6 @@ public class TerrainChunk
 
 
         meshObject = new GameObject("Terrain Chunk");
-        meshObject.isStatic = true;
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshCollider = meshObject.AddComponent<MeshCollider>();
@@ -125,6 +124,14 @@ public class TerrainChunk
 
                     if (lodMesh.hasMesh)
                     {
+                        if (lodIndex == 0)
+                        {
+                            meshCollider.enabled = true;
+                        }
+                        else
+                        {
+                            meshCollider.enabled = false;
+                        }
                         previousLODIndex = lodIndex;
                         meshFilter.mesh = lodMesh.mesh;
                     }
@@ -150,10 +157,10 @@ public class TerrainChunk
 
     public void UpdateCollisionMesh()
     {
+        float sqrDstFromViewerToEdge = bounds.SqrDistance(viewerPosition);
+
         if (!hasSetCollider)
         {
-            float sqrDstFromViewerToEdge = bounds.SqrDistance(viewerPosition);
-
             if (sqrDstFromViewerToEdge < detailLevels[colliderLODIndex].sqrVisibleDistanceThreshold)
             {
                 if (!lodMeshes[colliderLODIndex].hasRequestedMesh)
@@ -175,6 +182,10 @@ public class TerrainChunk
 
     public void SetVisible(bool visible)
     {
+
+        if (!visible)
+            meshCollider.enabled = false;
+
         meshObject.SetActive(visible);
     }
 
