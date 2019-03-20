@@ -41,10 +41,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 16666.664
-    damper: 2666.6663
+    spring: 16666.666
+    damper: 2666.6667
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620001
+  m_SuspensionDistance: 0.19620003
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -102,10 +102,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 16666.664
-    damper: 2666.6663
+    spring: 16666.666
+    damper: 2666.6667
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620001
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -315,8 +315,8 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 16666.666
-    damper: 2666.6667
+    spring: 16666.67
+    damper: 2666.6672
     targetPosition: 0.5
   m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
@@ -379,7 +379,7 @@ WheelCollider:
     spring: 16666.666
     damper: 2666.6667
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620003
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -422,7 +422,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7771348248396332397}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: -1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5542096510414078492}
@@ -654,3 +654,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b8ff225fe4a4e5eb8692650c4eb413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sensitivityX: 15
+  sensitivityY: 15
+  minimumX: -60
+  maximumX: 60
+  minimumY: -60
+  maximumY: 60
+  fpsCamera: {fileID: 6349860763823787459}
+  OutOfBattery:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  freezeInPlace: 0
+  freezeBattery: 0
+  batteryDepleteRate: 0.5
+  stats:
+    newSave: 0
+    saveFileIndex: 0
+    savedLevel: 0
+    batteryLife: 100
+    maxBattery: 100
+    lastSavedPosition: {x: 0, y: 0, z: 0}
+    currentPosition: {x: 0, y: 0, z: 0}

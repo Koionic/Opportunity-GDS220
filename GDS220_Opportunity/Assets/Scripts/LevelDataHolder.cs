@@ -27,4 +27,5 @@ public struct LevelData
     public string levelName;
     public TextureData levelTexture;
     public HeightMapSettings levelMap;
+    public RoverStats levelStats;
 }

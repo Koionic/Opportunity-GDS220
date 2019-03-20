@@ -1,14 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class LoadingController : MonoBehaviour
 {
-
-
-
     AsyncOperation async;
 
     float loadingProgress;
@@ -23,6 +21,9 @@ public class LoadingController : MonoBehaviour
     [SerializeField] float loadTime = 5f;
     float loadTimer;
 
+    public UnityEvent enteredGame;
+    public UnityEvent exitedGame;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -35,7 +36,7 @@ public class LoadingController : MonoBehaviour
 
     public void StartLoadingScreen(string scene, bool instant)
     {
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        SceneManager.sceneLoaded += OnLevelStartedLoading;
         loading = true;
         levelHasLoaded = false;
         levelIsReady = false;
@@ -50,30 +51,18 @@ public class LoadingController : MonoBehaviour
         {
             if (instantLoad)
             {
-                levelIsReady = true;
+                LeaveLoadingScreen();
             }
             else
             {
-                loadTimer = Time.timeSinceLevelLoad;
-
-                loadingProgress = Mathf.InverseLerp(0, loadTime, loadTimer) * 100;
-
-                if (loadTimer >= loadTime)
-                {
-                    levelIsReady = true;
-                }
+                UpdateLoadingPercent();
             }
 
             if (levelIsReady)
             {
-                if (instantLoad)
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    loading = false;
-                }
-                else if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    loadTimer = 0f;
-                    loading = false;
+                    LeaveLoadingScreen();
                 }
             }
         }
@@ -112,6 +101,32 @@ public class LoadingController : MonoBehaviour
         }
     }
 
+    void LeaveLoadingScreen()
+    {
+        loadTimer = 0f;
+        loading = false;
+
+        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
+        {
+            GameController.instance.StartLevel();
+        }
+        else if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.MainMenu))
+        {
+            exitedGame.Invoke();
+        }
+    }
+
+    void UpdateLoadingPercent()
+    {
+        loadTimer = Time.timeSinceLevelLoad;
+
+        loadingProgress = Mathf.InverseLerp(0, loadTime, loadTimer) * 100;
+
+        if (loadTimer >= loadTime)
+        {
+            levelIsReady = true;
+        }
+    }
 
     public bool IsLoading()
     {
@@ -130,13 +145,20 @@ public class LoadingController : MonoBehaviour
 
     public float LoadProgress()
     {
-        return loadingProgress;
+        return loadingProgress; 
     }
 
-    private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    private void OnLevelStartedLoading(Scene scene, LoadSceneMode mode)
     {
         Time.timeScale = 1f;
         levelHasLoaded = true;
         SceneController.instance.UpdateSceneState();
+
+        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
+        {
+            GameController.instance.PrepareRover();
+        }
+
+        SceneManager.sceneLoaded -= OnLevelStartedLoading;
     }
 }

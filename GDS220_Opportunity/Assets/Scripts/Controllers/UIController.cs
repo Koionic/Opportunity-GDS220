@@ -1,21 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class UIController : MonoBehaviour
 {
-
     [SerializeField] GameObject loadingScreen;
     [SerializeField] TextMeshProUGUI loadingPercentText;
     [SerializeField] TextMeshProUGUI loadingText;
 
-
     [SerializeField] GameObject pauseScreen;
+
+    [SerializeField] GameObject gameHUD;
+    [SerializeField] Image batteryLife;
 
     public static UIController instance = null;
 
-    // Start is called before the first frame update
+    RoverStats roverStats;
+
+    bool inGame, inMainMenu, inPauseMenu;
+
     void Awake()
     {
         if (instance == null)
@@ -34,11 +39,13 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckGameState();
+
         UpdateLoadingScreen();
 
         UpdatePauseScreen();
 
-        UpdateGeneralUI();
+        UpdateGameHUD();
     }
 
     void UpdateLoadingScreen()
@@ -73,25 +80,58 @@ public class UIController : MonoBehaviour
 
     void UpdatePauseScreen()
     {
-        pauseScreen.SetActive(SceneController.instance.TheCurrentScene() == SceneController.CurrentScene.Game && GameController.instance.IsPaused());
+        pauseScreen.SetActive(inGame && inPauseMenu);
     }
 
-    void UpdateGeneralUI()
+    void UpdateGameHUD()
     {
-        if (GameController.instance.IsPaused())
+        if (inGame)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            if (GameController.instance.IsPaused())
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
+            if (FindObjectOfType<RoverController>() != null)
+            {
+                roverStats = FindObjectOfType<RoverController>().stats;
+
+                float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
+                batteryLife.fillAmount = batteryPercentage;
+
+                if (batteryLife.fillAmount > 0.5f)
+                {
+                    batteryLife.color = new Color((1f - batteryPercentage) * 2f, 1f, 0f);
+                }
+                else
+                {
+                    batteryLife.color = new Color(1f, batteryPercentage * 2f, 0f);
+                }
+            }
+
+            gameHUD.SetActive(true);
         }
     }
 
-    public void UpdateBatteryLife()
+    void CheckGameState()
     {
-
+        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
+        {
+            inGame = true;
+            inMainMenu = false;
+            inPauseMenu = GameController.instance.IsPaused();
+        }
+        else if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.MainMenu))
+        {
+            inGame = false;
+            inMainMenu = true;
+            inPauseMenu = false;
+        }
     }
 }

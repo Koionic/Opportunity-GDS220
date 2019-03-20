@@ -22,7 +22,7 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField] Transform viewer;
     [SerializeField] Material mapMaterial;
 
-     Vector2 viewerPosition;
+    Vector2 viewerPosition;
     Vector2 viewerPositionOld;
 
     float meshWorldSize;
@@ -55,11 +55,12 @@ public class TerrainGenerator : MonoBehaviour
 
     private void Update()
     {
+
         viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
 
         if (viewerPosition != viewerPositionOld)
         {
-            foreach(TerrainChunk chunk in visibleTerrainChunks)
+            foreach (TerrainChunk chunk in visibleTerrainChunks)
             {
                 chunk.UpdateCollisionMesh();
             }
@@ -71,6 +72,7 @@ public class TerrainGenerator : MonoBehaviour
             UpdateVisibleChunks();
         }
     }
+
 
     void UpdateVisibleChunks()
     {
@@ -134,6 +136,11 @@ public class TerrainGenerator : MonoBehaviour
     public bool LevelIsLoaded()
     {
         return hasRendered;
+    }
+
+    public void SetViewer(Transform newViewer)
+    {
+        viewer = newViewer;
     }
 }
 

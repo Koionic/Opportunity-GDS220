@@ -9,6 +9,22 @@ public class GameController : MonoBehaviour
 
     public static GameController instance = null;
 
+    [SerializeField]
+    GameObject roverPrefab;
+
+    RoverController roverController;
+
+    [SerializeField]
+    RoverStats savedRoverStats;
+
+    bool quickSaveReady;
+    float quickSaveTimer = 0f;
+
+    [SerializeField]
+    float quickSaveDelayInMinutes;
+
+    bool newLevel = true;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -17,21 +33,31 @@ public class GameController : MonoBehaviour
 
         else if (instance != this)
             Destroy(this);
+            
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void StartLevel()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        roverController.ToggleRoverStates(RoverController.FreezeType.All, false);
+    }
+
+    void EndLevel()
+    {
+        roverController.ToggleRoverStates(RoverController.FreezeType.All, true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P) && !isPaused)
+        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
         {
-            Pause();
+            if (Input.GetKeyDown(KeyCode.P) && !isPaused)
+            {
+                Pause();
+            }
+
+            quickSaveTimer += Time.deltaTime;
+            quickSaveReady = quickSaveTimer >= quickSaveDelayInMinutes * 60f;
         }
     }
 
@@ -48,12 +74,52 @@ public class GameController : MonoBehaviour
     {
         Time.timeScale = 1f;
         isPaused = false;
+
+        if (quickSaveReady)
+        {
+            Save();
+        }
     }
 
     public void Exit()
     {
         SceneController.instance.MainMenu();
     }
+
+    public void LoadSavedStats(int saveFileIndex)
+    {
+        savedRoverStats = SaveFiles.instance.GrabSaveFile(saveFileIndex);
+    }
+
+    public void Save()
+    {
+        savedRoverStats = roverController.stats;
+        quickSaveTimer = 0f;
+        print("saved!");
+    }
+
+    public void PrepareRover()
+    {
+        Vector3 spawnPoint = savedRoverStats.lastSavedPosition;
+        if (newLevel)
+        {
+            spawnPoint = LevelDataHolder.instance.levelData[LevelDataHolder.instance.currentLevel].levelStats.lastSavedPosition;
+            newLevel = false;
+        }
+
+
+        roverController = FindObjectOfType<RoverController>();
+        roverController.gameObject.transform.position = spawnPoint;
+
+        roverController.ToggleRoverStates(RoverController.FreezeType.All, true);
+        roverController.OutOfBattery.AddListener(EndLevel);
+
+        savedRoverStats.currentPosition = spawnPoint;
+        savedRoverStats.lastSavedPosition = spawnPoint;
+        roverController.stats = savedRoverStats;
+    }
+
+
 
     public bool IsPaused()
     {

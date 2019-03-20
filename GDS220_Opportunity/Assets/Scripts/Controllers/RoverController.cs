@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RoverController : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class RoverController : MonoBehaviour
     float sensitivityX = 15f, sensitivityY = 15f;
 
     [SerializeField]
-    float minimumX = -360f, maximumX = 360f;
+    float minimumX = -80f, maximumX = 80f;
 
     [SerializeField]
     float minimumY = -60f, maximumY = 60f;
@@ -21,19 +22,67 @@ public class RoverController : MonoBehaviour
     [SerializeField]
     Camera fpsCamera;
 
-    [SerializeField]
-    float mouseLookLimitX, mouseLookLimitY;
+    Rigidbody rb;
 
-    // Start is called before the first frame update
+    public UnityEvent OutOfBattery;
+
+    public bool freezeInPlace = true;
+    public bool freezeBattery = true;
+
+    bool outOfBattery = false;
+
+    [SerializeField]
+    float batteryDepleteRate = .5f;
+
+    public RoverStats stats;
+
     void Start()
     {
         wheelDrive = GetComponent<WheelDrive>();
+        rb = GetComponent<Rigidbody>();
+
+        stats.savedLevel = LevelDataHolder.instance.currentLevel;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        ProcessInputs();
+        if (freezeInPlace)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints.None;
+        }
+
+        if (!freezeBattery)
+        {
+            DepleteBattery();
+        }
+
+        if (!outOfBattery)
+        {
+            ProcessInputs();
+        }
+    }
+
+
+    void DepleteBattery()
+    {
+        stats.batteryLife -= Time.deltaTime * batteryDepleteRate;
+
+        outOfBattery = stats.batteryLife <= 0f;
+
+        if (outOfBattery)
+        {
+            OutOfBattery.Invoke();
+        }
+    }
+
+    void ChargeBattery(float charge)
+    {
+        stats.batteryLife = Mathf.Clamp((stats.batteryLife + charge), 0f, stats.maxBattery);
     }
 
     void ProcessInputs()
@@ -50,5 +99,47 @@ public class RoverController : MonoBehaviour
 
         fpsCamera.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
 
+        stats.currentPosition = transform.position;
+
     }
+
+    public enum FreezeType { Battery, Movement, All};
+
+    public void ToggleRoverStates(FreezeType freezeType, bool freeze)
+    {
+        switch(freezeType)
+        {
+            case (FreezeType.All):
+                {
+                    freezeInPlace = freeze;
+                    freezeBattery = freeze;
+                    break;
+                }
+
+            case (FreezeType.Battery):
+                {
+                    freezeBattery = freeze;
+                    break;
+                }
+
+            case (FreezeType.Movement):
+                {
+                    freezeInPlace = freeze;
+                    break;
+                }
+        }
+    }
+}
+
+[System.Serializable]
+public struct RoverStats
+{
+    public bool newSave;
+    public int saveFileIndex;
+    public int savedLevel;
+    public float batteryLife;
+    public float maxBattery;
+    public Vector3 lastSavedPosition;
+    public Vector3 currentPosition;
+
 }

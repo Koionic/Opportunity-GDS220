@@ -75,9 +75,9 @@ public class SceneController : MonoBehaviour
         Debug.Log("Quitting");
     }
 
-    public CurrentScene TheCurrentScene()
+    public bool CurrentSceneIs(CurrentScene scene)
     {
-        return currentScene;
+        return currentScene == scene;
     }
 
 }
