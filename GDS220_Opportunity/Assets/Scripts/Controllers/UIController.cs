@@ -6,20 +6,38 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField] GameObject loadingScreen;
-    [SerializeField] TextMeshProUGUI loadingPercentText;
-    [SerializeField] TextMeshProUGUI loadingText;
+    [SerializeField] 
+    GameObject loadingScreen;
+    [SerializeField] 
+    TextMeshProUGUI loadingPercentText;
+    [SerializeField] 
+    TextMeshProUGUI loadingText;
 
-    [SerializeField] GameObject pauseScreen;
+    [SerializeField] 
+    GameObject pauseScreen;
 
-    [SerializeField] GameObject gameHUD;
-    [SerializeField] Image batteryLife;
+    [SerializeField] 
+    GameObject gameHUD;
+    [SerializeField] 
+    Image batteryLife;
+
+    [SerializeField] 
+    GameObject cameraHUD;
+    [SerializeField]
+    Slider zoomSlider;
+
+    [SerializeField] 
+    GameObject gameOverScreen;
 
     public static UIController instance = null;
 
+    RoverController roverController;
+
+    PhotoCamera roverCamera;
+
     RoverStats roverStats;
 
-    bool inGame, inMainMenu, inPauseMenu;
+    bool inGame, inMainMenu, inPauseMenu, inGameOver, inCameraMode;
 
     void Awake()
     {
@@ -41,11 +59,30 @@ public class UIController : MonoBehaviour
     {
         CheckGameState();
 
+        if (inGame)
+        {
+            if (roverController != null)
+            {
+                roverStats = roverController.stats;
+            }
+            else if (FindObjectOfType<RoverController>() != null)
+            {
+                roverController = FindObjectOfType<RoverController>();
+                roverCamera = roverController.gameObject.GetComponent<PhotoCamera>();
+            }
+        }
+
+        UpdateCursor();
+
         UpdateLoadingScreen();
 
         UpdatePauseScreen();
 
         UpdateGameHUD();
+
+        UpdateCameraHUD();
+
+        UpdateGameOverScreen();
     }
 
     void UpdateLoadingScreen()
@@ -57,14 +94,12 @@ public class UIController : MonoBehaviour
                 loadingPercentText.text = "100%";
                 loadingPercentText.color = Color.green;
 
-                loadingText.text = "";
+                loadingText.text = "Press Space To Start";
             }
             else
             {
                 loadingPercentText.text = LoadingController.instance.LoadProgress().ToString("F") + "%";
                 loadingPercentText.color = Color.white;
-
-                loadingText.text = "";
             }
         }
         else
@@ -80,14 +115,84 @@ public class UIController : MonoBehaviour
 
     void UpdatePauseScreen()
     {
-        pauseScreen.SetActive(inGame && inPauseMenu);
+        if (inGame)
+        {
+            if (inPauseMenu)
+            {
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    GameController.instance.Resume();
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    GameController.instance.Pause();
+                }
+            }
+
+            pauseScreen.SetActive(inPauseMenu);
+        }
     }
 
     void UpdateGameHUD()
     {
         if (inGame)
         {
-            if (GameController.instance.IsPaused())
+            float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
+            batteryLife.fillAmount = batteryPercentage;
+
+            if (batteryLife.fillAmount > 0.5f)
+            {
+                batteryLife.color = new Color((1f - batteryPercentage) * 2f, 1f, 0f);
+            }
+            else
+            {
+                batteryLife.color = new Color(1f, batteryPercentage * 2f, 0f);
+            }
+
+        }
+        gameHUD.SetActive(inGame);
+    }
+
+    void UpdateCameraHUD()
+    {
+        zoomSlider.value = roverCamera.zoomPercent;
+
+        cameraHUD.SetActive(roverController.cameraMode);
+    }
+
+    void UpdateGameOverScreen()
+    {
+        gameOverScreen.SetActive(GameController.instance.GameOver());
+    }
+
+    void CheckGameState()
+    {
+        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
+        {
+            inGameOver = GameController.instance.GameOver();
+            inGame = !inGameOver;
+            inMainMenu = false;
+            inPauseMenu = GameController.instance.IsPaused() && inGame;
+            inCameraMode = roverController.cameraMode;
+        }
+        else if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.MainMenu))
+        {
+            inGame = false;
+            inMainMenu = true;
+            inPauseMenu = false;
+            inGameOver = false;
+            inCameraMode = false;
+        }
+    }
+
+    void UpdateCursor()
+    {
+        if (inGame)
+        {
+            if (inPauseMenu || inGameOver)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
@@ -98,40 +203,13 @@ public class UIController : MonoBehaviour
                 Cursor.visible = false;
             }
 
-            if (FindObjectOfType<RoverController>() != null)
-            {
-                roverStats = FindObjectOfType<RoverController>().stats;
-
-                float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
-                batteryLife.fillAmount = batteryPercentage;
-
-                if (batteryLife.fillAmount > 0.5f)
-                {
-                    batteryLife.color = new Color((1f - batteryPercentage) * 2f, 1f, 0f);
-                }
-                else
-                {
-                    batteryLife.color = new Color(1f, batteryPercentage * 2f, 0f);
-                }
-            }
-
-            gameHUD.SetActive(true);
         }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
     }
 
-    void CheckGameState()
-    {
-        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
-        {
-            inGame = true;
-            inMainMenu = false;
-            inPauseMenu = GameController.instance.IsPaused();
-        }
-        else if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.MainMenu))
-        {
-            inGame = false;
-            inMainMenu = true;
-            inPauseMenu = false;
-        }
-    }
 }

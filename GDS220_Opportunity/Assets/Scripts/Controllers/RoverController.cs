@@ -19,13 +19,17 @@ public class RoverController : MonoBehaviour
     float rotationX;
     float rotationY;
 
-    [SerializeField]
-    Camera fpsCamera;
+    public Camera fpsCamera;
 
     Rigidbody rb;
 
+    public UnityEvent photoTaken;
+
+    public bool cameraMode;
+
     public UnityEvent OutOfBattery;
 
+    public bool freezeMovement = true;
     public bool freezeInPlace = true;
     public bool freezeBattery = true;
 
@@ -41,7 +45,8 @@ public class RoverController : MonoBehaviour
         wheelDrive = GetComponent<WheelDrive>();
         rb = GetComponent<Rigidbody>();
 
-        stats.savedLevel = LevelDataHolder.instance.currentLevel;
+        if (LevelDataHolder.instance != null)
+            stats.savedLevel = LevelDataHolder.instance.currentLevel;
     }
 
     // Update is called once per frame
@@ -61,10 +66,8 @@ public class RoverController : MonoBehaviour
             DepleteBattery();
         }
 
-        if (!outOfBattery)
-        {
-            ProcessInputs();
-        }
+        ProcessInputs();
+
     }
 
 
@@ -76,6 +79,11 @@ public class RoverController : MonoBehaviour
 
         if (outOfBattery)
         {
+            stats.batteryLife = 0f;
+
+            FreezeRoverStates(FreezeType.Movement, true);
+            FreezeRoverStates(FreezeType.Battery, true);
+
             OutOfBattery.Invoke();
         }
     }
@@ -87,6 +95,21 @@ public class RoverController : MonoBehaviour
 
     void ProcessInputs()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            cameraMode = !cameraMode;
+
+            if (cameraMode)
+            {
+                FreezeRoverStates(FreezeType.Movement, true);
+            }
+            else
+            {
+                fpsCamera.fieldOfView = 90f;
+                FreezeRoverStates(FreezeType.Movement, false);
+            }
+        }
+
         Vector2 movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         rotationX += Input.GetAxis("Mouse X") * sensitivityX;
@@ -95,22 +118,48 @@ public class RoverController : MonoBehaviour
         rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
         rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
 
+        if (outOfBattery || freezeMovement)
+        {
+            movementInput = Vector2.zero;
+        }
+        else
+        {
+            if (GameController.instance != null)
+            {
+                if (GameController.instance.IsPaused())
+                {
+                    if (Input.GetKeyDown(KeyCode.P))
+                    {
+                        GameController.instance.Resume();
+                    }
+                }
+                else
+                {
+                    if (Input.GetKeyDown(KeyCode.P))
+                    {
+                        GameController.instance.Pause();
+                    }
+                }
+            }
+        }
+
         wheelDrive.SetMoveInput(movementInput);
 
-        fpsCamera.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
+        fpsCamera.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0f);
 
         stats.currentPosition = transform.position;
 
     }
 
-    public enum FreezeType { Battery, Movement, All};
+    public enum FreezeType { Battery, Movement, Physics, All};
 
-    public void ToggleRoverStates(FreezeType freezeType, bool freeze)
+    public void FreezeRoverStates(FreezeType freezeType, bool freeze)
     {
         switch(freezeType)
         {
             case (FreezeType.All):
                 {
+                    freezeMovement = freeze;
                     freezeInPlace = freeze;
                     freezeBattery = freeze;
                     break;
@@ -123,6 +172,12 @@ public class RoverController : MonoBehaviour
                 }
 
             case (FreezeType.Movement):
+                {
+                    freezeMovement = freeze;
+                    break;
+                }
+
+            case (FreezeType.Physics):
                 {
                     freezeInPlace = freeze;
                     break;

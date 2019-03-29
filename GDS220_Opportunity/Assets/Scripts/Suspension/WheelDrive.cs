@@ -81,11 +81,13 @@ public class WheelDrive : MonoBehaviour
         m_Wheels[0].ConfigureVehicleSubsteps(criticalSpeed, stepsBelow, stepsAbove);
 
         angle = maxAngle * angleInput;
-        torque = maxTorque * torqueInput;
+
+
+        torque = torqueInput != 0 ? maxTorque * torqueInput : 0;
 
         //if (GameController.instance != null && !GameController.instance.IsPaused())
         {
-            float handBrake = torque == 0 ? brakeTorque : 0;
+            float brake = torque <= 0 ? brakeTorque : 0;
 
             foreach (WheelCollider wheel in m_Wheels)
             {
@@ -93,19 +95,17 @@ public class WheelDrive : MonoBehaviour
                 if (wheel.transform.localPosition.z > 0)
                     wheel.steerAngle = angle;
 
-                if (wheel.transform.localPosition.z < 0)
-                {
-                    wheel.brakeTorque = handBrake;
-                }
 
                 if (wheel.transform.localPosition.z < 0 && driveType != DriveType.FrontWheelDrive)
                 {
                     wheel.motorTorque = torque;
+                    wheel.brakeTorque = brake;
                 }
 
                 if (wheel.transform.localPosition.z >= 0 && driveType != DriveType.RearWheelDrive)
                 {
                     wheel.motorTorque = torque;
+                    wheel.brakeTorque = brake;
                 }
 
                 // Update visual wheels if any.

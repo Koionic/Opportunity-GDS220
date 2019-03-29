@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
 {
 
     bool isPaused = false;
+    bool gameOver = false;
 
     public static GameController instance = null;
 
@@ -38,12 +39,13 @@ public class GameController : MonoBehaviour
 
     public void StartLevel()
     {
-        roverController.ToggleRoverStates(RoverController.FreezeType.All, false);
+        roverController.FreezeRoverStates(RoverController.FreezeType.All, false);
     }
 
     void EndLevel()
     {
-        roverController.ToggleRoverStates(RoverController.FreezeType.All, true);
+        gameOver = true;
+        isPaused = true;
     }
 
     // Update is called once per frame
@@ -51,23 +53,15 @@ public class GameController : MonoBehaviour
     {
         if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
         {
-            if (Input.GetKeyDown(KeyCode.P) && !isPaused)
-            {
-                Pause();
-            }
-
             quickSaveTimer += Time.deltaTime;
             quickSaveReady = quickSaveTimer >= quickSaveDelayInMinutes * 60f;
         }
     }
 
-    void Pause()
+    public void Pause()
     {
         Time.timeScale = 0f;
         isPaused = true;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
     }
 
     public void Resume()
@@ -83,6 +77,9 @@ public class GameController : MonoBehaviour
 
     public void Exit()
     {
+        Save();
+        gameOver = false;
+        isPaused = false;
         SceneController.instance.MainMenu();
     }
 
@@ -111,15 +108,19 @@ public class GameController : MonoBehaviour
         roverController = FindObjectOfType<RoverController>();
         roverController.gameObject.transform.position = spawnPoint;
 
-        roverController.ToggleRoverStates(RoverController.FreezeType.All, true);
+        roverController.FreezeRoverStates(RoverController.FreezeType.All, true);
         roverController.OutOfBattery.AddListener(EndLevel);
 
         savedRoverStats.currentPosition = spawnPoint;
         savedRoverStats.lastSavedPosition = spawnPoint;
+        savedRoverStats.batteryLife = savedRoverStats.maxBattery;
         roverController.stats = savedRoverStats;
     }
 
-
+    public bool GameOver()
+    {
+        return gameOver;
+    }
 
     public bool IsPaused()
     {
