@@ -23,7 +23,7 @@ public class RoverController : MonoBehaviour
 
     Rigidbody rb;
 
-    public UnityEvent photoTaken;
+    public UnityEvent<Texture2D, bool> photoTaken;
 
     public bool cameraMode;
 
@@ -39,6 +39,17 @@ public class RoverController : MonoBehaviour
     float batteryDepleteRate = .5f;
 
     public RoverStats stats;
+
+    public static RoverController instance;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+
+        else if (instance != this)
+            Destroy(this);
+    }
 
     void Start()
     {
@@ -101,7 +112,7 @@ public class RoverController : MonoBehaviour
 
             if (cameraMode)
             {
-                FreezeRoverStates(FreezeType.Movement, true);
+                //FreezeRoverStates(FreezeType.Movement, true);
             }
             else
             {

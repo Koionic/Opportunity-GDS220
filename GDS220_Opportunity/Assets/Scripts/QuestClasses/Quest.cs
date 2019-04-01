@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum QuestType { Photo, Collect, Repair };
+public enum QuestType { Photo, Collect, Repair, Null };
 
 public class Quest : ScriptableObject
 {
@@ -11,31 +11,34 @@ public class Quest : ScriptableObject
 
     public UnityEvent<QuestData> QuestCompleted;
 
-    protected RoverController roverController;
-
     public virtual void StartQuest()
     {
         questData.isActive = true;
-        roverController = FindObjectOfType<RoverController>();
     }
 
     void Update()
     {
-        if (questData.isActive)
-        {
-            QuestUpdate();
-        }
+
     }
 
-    protected virtual void QuestUpdate()
+    public virtual void QuestUpdate()
     {
 
     }
 
-    public void CompleteQuest()
+    public virtual void CheckPhoto(Texture2D newPhoto, bool correct)
     {
-        questData.isCompleted = true;
-        QuestCompleted.Invoke(questData);
+
+    }
+
+    public virtual Transform GetPhotoTarget()
+    {
+        return null;
+    }
+
+    public void EndQuest()
+    {
+        QuestController.instance.CompleteQuest(questData);
     }
 }
 

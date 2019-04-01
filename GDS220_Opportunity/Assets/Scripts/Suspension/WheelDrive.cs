@@ -38,22 +38,6 @@ public class WheelDrive : MonoBehaviour
     float torque;
     float torqueInput;
 
-    [SerializeField]
-    float sensitivityX = 15f, sensitivityY = 15f;
-
-    [SerializeField]
-    float minimumX = -360f, maximumX = 360f;
-
-    [SerializeField]
-    float minimumY = -60f, maximumY = 60f;
-
-    float rotationX;
-    float rotationY;
-
-    [SerializeField]
-    Camera fpsCamera;
-
-    [SerializeField] float mouseLookLimitX, mouseLookLimitY;
 
     // Find all the WheelColliders down in the hierarchy.
     void Start()
@@ -83,11 +67,11 @@ public class WheelDrive : MonoBehaviour
         angle = maxAngle * angleInput;
 
 
-        torque = torqueInput != 0 ? maxTorque * torqueInput : 0;
+        torque = torqueInput != 0f ? maxTorque * torqueInput : 0;
 
         //if (GameController.instance != null && !GameController.instance.IsPaused())
         {
-            float brake = torque <= 0 ? brakeTorque : 0;
+            float brake = torque == 0f ? brakeTorque : 0;
 
             foreach (WheelCollider wheel in m_Wheels)
             {

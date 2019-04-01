@@ -7,7 +7,7 @@ public class QuestController : MonoBehaviour
     [SerializeField]
     Quest[] quests;
 
-    Quest currentQuest;
+    public Quest currentQuest;
 
     public QuestType previousQuestType;
     public QuestType currentQuestType;
@@ -34,7 +34,10 @@ public class QuestController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (currentQuest != null)
+        {
+            currentQuest.QuestUpdate();
+        }
     }
 
     public void StartNewQuest()
@@ -46,16 +49,24 @@ public class QuestController : MonoBehaviour
                 currentQuestIndex = i;
                 currentQuest = quests[currentQuestIndex];
                 currentQuest.StartQuest();
-                currentQuest.QuestCompleted.AddListener(OnQuestCompleted);
                 currentQuestType = currentQuest.questData.questType;
                 break;
             }
         }
     }
 
-    public void OnQuestCompleted(QuestData completedQuestData)
+    void SendPhoto(Texture2D texture, bool correct)
     {
-        
+        print("questcontroller sending");
+        currentQuest.CheckPhoto(texture, correct);
+    }
+
+    public void CompleteQuest(QuestData completedQuestData)
+    {
+        currentQuest.questData.isCompleted = true;
+        currentQuest.questData.isActive = false;
+        currentQuest = null;
+        currentQuestType = QuestType.Null;
     }
 
 }

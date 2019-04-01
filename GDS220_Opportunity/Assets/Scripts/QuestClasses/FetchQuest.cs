@@ -15,11 +15,11 @@ public class FetchQuest : Quest
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
-    protected override void QuestUpdate()
+    public override void QuestUpdate()
     {
         CheckPlayerLocation();
 
@@ -27,7 +27,7 @@ public class FetchQuest : Quest
 
     void CheckPlayerLocation()
     {
-        Vector3 distanceFromTargetArea = targetArea - roverController.stats.currentPosition;
+        Vector3 distanceFromTargetArea = targetArea - RoverController.instance.stats.currentPosition;
 
         if (Mathf.Abs(distanceFromTargetArea.x) < targetThreshold && Mathf.Abs(distanceFromTargetArea.z) < targetThreshold)
         {

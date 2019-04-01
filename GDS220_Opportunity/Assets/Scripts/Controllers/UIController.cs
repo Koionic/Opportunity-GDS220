@@ -25,6 +25,10 @@ public class UIController : MonoBehaviour
     GameObject cameraHUD;
     [SerializeField]
     Slider zoomSlider;
+    [SerializeField]
+    TextMeshProUGUI targetText;
+    [SerializeField]
+    RawImage newPhotoUI;
 
     [SerializeField] 
     GameObject gameOverScreen;
@@ -65,10 +69,10 @@ public class UIController : MonoBehaviour
             {
                 roverStats = roverController.stats;
             }
-            else if (FindObjectOfType<RoverController>() != null)
+            else if (RoverController.instance != null)
             {
-                roverController = FindObjectOfType<RoverController>();
-                roverCamera = roverController.gameObject.GetComponent<PhotoCamera>();
+                roverController = RoverController.instance;
+                roverCamera = roverController.gameObject.GetComponentInChildren<PhotoCamera>();
             }
         }
 
@@ -158,9 +162,51 @@ public class UIController : MonoBehaviour
 
     void UpdateCameraHUD()
     {
-        zoomSlider.value = roverCamera.zoomPercent;
+        if (inGame)
+        {
+            zoomSlider.value = roverCamera.zoomPercent;
 
-        cameraHUD.SetActive(roverController.cameraMode);
+            string targetStatus = "";
+
+            if (QuestController.instance.currentQuestType == QuestType.Photo)
+            {
+                if (roverCamera.targetInView && roverCamera.targetInRange && !roverCamera.targetObscured)
+                {
+                    targetStatus = "Target in View";
+                }
+                else
+                {
+                    if (!roverCamera.targetInView)
+                    {
+                        targetStatus = "Target not in view";
+                    }
+                    else if (!roverCamera.targetInRange)
+                    {
+                        targetStatus = "Target too far away";
+                    }
+                    else if (roverCamera.targetObscured)
+                    {
+                        targetStatus = "Target is obscured";
+                    }
+                }
+            }
+
+            targetText.text = targetStatus;
+
+            cameraHUD.SetActive(roverController.cameraMode);
+        }
+    }
+
+    public void ShowNewPhoto(Texture2D newPhotoTexture)
+    {
+        newPhotoUI.gameObject.SetActive(true);
+        newPhotoUI.texture = newPhotoTexture;
+    }
+
+    public void DeleteNewPhoto()
+    {
+        newPhotoUI.texture = null;
+        newPhotoUI.gameObject.SetActive(false); 
     }
 
     void UpdateGameOverScreen()
@@ -176,7 +222,10 @@ public class UIController : MonoBehaviour
             inGame = !inGameOver;
             inMainMenu = false;
             inPauseMenu = GameController.instance.IsPaused() && inGame;
-            inCameraMode = roverController.cameraMode;
+            if (roverController != null)
+            {
+                inCameraMode = roverController.cameraMode;
+            }
         }
         else if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.MainMenu))
         {

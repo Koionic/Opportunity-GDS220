@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    public const string mainMenuSceneName = "Main Menu", gameSceneName = "Game";
+    public const string mainMenuSceneName = "Main Menu", gameSceneName = "Tester";
 
     public static SceneController instance = null;
 
@@ -56,7 +56,7 @@ public class SceneController : MonoBehaviour
 
     public void GameScene()
     {
-        LoadScene(gameSceneName, false);
+        LoadScene(gameSceneName, true);
     }
 
     public void MainMenu()

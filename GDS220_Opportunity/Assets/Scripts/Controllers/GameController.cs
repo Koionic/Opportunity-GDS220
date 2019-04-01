@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     GameObject roverPrefab;
 
-    RoverController roverController;
+    public RoverController roverController;
 
     [SerializeField]
     RoverStats savedRoverStats;
@@ -40,6 +40,8 @@ public class GameController : MonoBehaviour
     public void StartLevel()
     {
         roverController.FreezeRoverStates(RoverController.FreezeType.All, false);
+
+        QuestController.instance.StartNewQuest();
     }
 
     void EndLevel()
@@ -105,7 +107,7 @@ public class GameController : MonoBehaviour
         }
 
 
-        roverController = FindObjectOfType<RoverController>();
+        roverController = RoverController.instance;
         roverController.gameObject.transform.position = spawnPoint;
 
         roverController.FreezeRoverStates(RoverController.FreezeType.All, true);

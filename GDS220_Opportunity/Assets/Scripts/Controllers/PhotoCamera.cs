@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhotoCamera : MonoBehaviour
 {
     [SerializeField]
-    float minZoom = 40f, maxZoom = 90f, zoomSpeed = 3f;
+    float minZoom = 40f, maxZoom = 90f, zoomSpeed = 60f;
 
     public float zoomPercent;
 
@@ -13,7 +13,10 @@ public class PhotoCamera : MonoBehaviour
     float viewportMargin;
 
     [SerializeField]
-    float distanceMargin;
+    float losRadius;
+
+    [SerializeField]
+    float distanceMargin, distanceModifier;
 
     Camera roverCamera;
 
@@ -22,9 +25,9 @@ public class PhotoCamera : MonoBehaviour
     [SerializeField]
     Transform cameraTarget;
 
-    bool targetTooFar;
-    bool targetInView;
-    bool targetObscured;
+    public bool targetInRange;
+    public bool targetInView;
+    public bool targetObscured;
 
     bool takePhotoNextFrame;
 
@@ -33,7 +36,7 @@ public class PhotoCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        roverController = FindObjectOfType<RoverController>();
+        roverController = RoverController.instance;
         roverCamera = roverController.fpsCamera;
         photoCamera = GetComponent<Camera>();
     }
@@ -43,19 +46,20 @@ public class PhotoCamera : MonoBehaviour
     {
         if (roverController.cameraMode)
         {
-            ZoomCamera(Input.GetAxis("CameraHorizontal"));
+            UpdateCamera(Input.GetAxis("CameraHorizontal"));
 
             if (QuestController.instance != null)
             {
                 if (QuestController.instance.currentQuestType == QuestType.Photo)
                 {
+                    cameraTarget = GameObject.FindWithTag("CameraTarget").transform;
 
+                    if (cameraTarget != null)
+                    {
+                        CheckLineOfSight();
+                        CheckVisionOfTarget();
+                    }
                 }
-            }
-            else
-            {
-                CheckAngleOfTarget(cameraTarget);
-                CheckLineOfSight(cameraTarget);
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -65,60 +69,64 @@ public class PhotoCamera : MonoBehaviour
         }
     }
 
-    void ZoomCamera (float zoomAmount)
+    void UpdateCamera (float zoomAmount)
     {
         if (zoomAmount != 0f)
         {
-            float deltaZoom = Mathf.Clamp(photoCamera.fieldOfView + (zoomAmount * Time.deltaTime * zoomSpeed), minZoom, maxZoom);
-            photoCamera.fieldOfView = deltaZoom;
-            roverController.fpsCamera.fieldOfView = photoCamera.fieldOfView;
+            float deltaZoom = Mathf.Clamp(roverCamera.fieldOfView + (zoomAmount * Time.deltaTime * zoomSpeed), minZoom, maxZoom);
+            roverCamera.fieldOfView = deltaZoom;
 
-            zoomPercent = 1f - Mathf.InverseLerp(minZoom, maxZoom, photoCamera.fieldOfView);
+            zoomPercent = 1f - Mathf.InverseLerp(minZoom, maxZoom, roverCamera.fieldOfView); 
         }
     }
 
-    void CheckAngleOfTarget(Transform target)
+    void CheckVisionOfTarget()
     {
         //creates a vector to compare against the vector between the player and the target
-        Vector3 normalisedHeading = transform.forward;
-        Vector3 normalisedCameraVector = (target.position - transform.position).normalized;
-        float dotProduct = Vector3.Dot(normalisedHeading, normalisedCameraVector);
+        Vector3 normalisedHeading = roverCamera.transform.forward;
+        Vector3 normalisedTargetVector = (cameraTarget.position - roverCamera.transform.position).normalized;
+        float dotProduct = Vector3.Dot(normalisedHeading, normalisedTargetVector);
         float angle = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
 
-        float searchAngle = photoCamera.fieldOfView - viewportMargin;
+
+        float searchAngle = roverCamera.fieldOfView - viewportMargin;
 
         if (angle < searchAngle)
         {
             targetInView = true;
         }
-        targetInView = false;
+        else
+        {
+            targetInView = false;
+        }
     }
 
     //function that checks if the player is in the enemies physical line of sight
-    void CheckLineOfSight(Transform target)
+    void CheckLineOfSight()
     {
-        //creates a ray facing the player
-        Ray ray = new Ray(transform.position, (target.position - transform.position));
         RaycastHit raycast;
-
+        
         //checks if anything is in the players direction
-        if (Physics.Raycast(ray, out raycast))
+        if (Physics.SphereCast(roverCamera.transform.position, losRadius, roverCamera.transform.forward, out raycast))
         {
+            print(raycast.collider.name);
             //sets the bool to true if the player is hit by the ray
-            if (raycast.collider.CompareTag("CameraTarget"))
+            if (raycast.collider.CompareTag("CameraTarget") && raycast.collider.gameObject == cameraTarget.gameObject)
             {
                 targetObscured = false;
 
-                if ((target.position - transform.position).magnitude > distanceMargin)
+                float distanceBuffer = distanceMargin + (zoomPercent * distanceModifier);
+
+                if (raycast.distance < distanceBuffer)
                 {
-                    targetTooFar = true;
+                    targetInRange = true;
                 }
                 else
                 {
-                    targetTooFar = false;
+                    targetInRange = false;
                 }
             }
-            else if (targetInView)
+            else
             {
                 targetObscured = true;
             }
@@ -142,17 +150,36 @@ public class PhotoCamera : MonoBehaviour
 
     void TakePhoto()
     {
+        photoCamera.fieldOfView = roverCamera.fieldOfView;
+        photoCamera.transform.rotation = roverCamera.transform.rotation;
+
+        roverCamera.enabled = false;
+
         RenderTexture renderTexture = photoCamera.targetTexture;
 
         Texture2D renderResult = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.ARGB32, false);
         Rect rect = new Rect(0, 0, renderTexture.width, renderTexture.height);
         renderResult.ReadPixels(rect, 0, 0);
 
+        if (QuestController.instance != null)
+        {
+            if (QuestController.instance.currentQuestType == QuestType.Photo)
+            {
+                bool correct = targetInView && targetInRange && !targetObscured;
+
+                renderResult.Apply();
+
+                QuestController.instance.currentQuest.CheckPhoto(renderResult, correct);
+            }
+        }
+
         byte[] byteArray = renderResult.EncodeToPNG();
         System.IO.File.WriteAllBytes(Application.dataPath + "/CameraScreenshot.png", byteArray);
 
         RenderTexture.ReleaseTemporary(renderTexture);
         photoCamera.targetTexture = null;
+
+        roverCamera.enabled = true;
     }
 
 }
