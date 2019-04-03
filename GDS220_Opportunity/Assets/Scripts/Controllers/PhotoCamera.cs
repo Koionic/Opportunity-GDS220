@@ -57,7 +57,7 @@ public class PhotoCamera : MonoBehaviour
                     if (cameraTarget != null)
                     {
                         CheckLineOfSight();
-                        CheckVisionOfTarget();
+                        targetInView = CheckVisionOfTarget(cameraTarget.position, roverCamera.fieldOfView - viewportMargin);
                     }
                 }
             }
@@ -80,24 +80,22 @@ public class PhotoCamera : MonoBehaviour
         }
     }
 
-    void CheckVisionOfTarget()
+    public bool CheckVisionOfTarget(Vector3 target, float searchAngle)
     {
         //creates a vector to compare against the vector between the player and the target
         Vector3 normalisedHeading = roverCamera.transform.forward;
-        Vector3 normalisedTargetVector = (cameraTarget.position - roverCamera.transform.position).normalized;
+        Vector3 normalisedTargetVector = (target - roverCamera.transform.position).normalized;
         float dotProduct = Vector3.Dot(normalisedHeading, normalisedTargetVector);
         float angle = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
 
 
-        float searchAngle = roverCamera.fieldOfView - viewportMargin;
-
         if (angle < searchAngle)
         {
-            targetInView = true;
+            return true;
         }
         else
         {
-            targetInView = false;
+            return false;
         }
     }
 
@@ -138,21 +136,22 @@ public class PhotoCamera : MonoBehaviour
         if (takePhotoNextFrame)
         {
             takePhotoNextFrame = false;
+
             TakePhoto();
         }
     }
 
     private void TriggerPhoto(int width, int height)
     {
+        photoCamera.fieldOfView = roverCamera.fieldOfView;
+        photoCamera.transform.rotation = roverCamera.transform.rotation;
+
         photoCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         takePhotoNextFrame = true;
     }
 
     void TakePhoto()
     {
-        photoCamera.fieldOfView = roverCamera.fieldOfView;
-        photoCamera.transform.rotation = roverCamera.transform.rotation;
-
         roverCamera.enabled = false;
 
         RenderTexture renderTexture = photoCamera.targetTexture;
@@ -167,14 +166,16 @@ public class PhotoCamera : MonoBehaviour
             {
                 bool correct = targetInView && targetInRange && !targetObscured;
 
-                renderResult.Apply();
+                Texture2D photo = renderResult;
 
-                QuestController.instance.currentQuest.CheckPhoto(renderResult, correct);
+                photo.Apply();
+
+                QuestController.instance.currentQuest.CheckPhoto(photo, correct);
             }
         }
 
-        byte[] byteArray = renderResult.EncodeToPNG();
-        System.IO.File.WriteAllBytes(Application.dataPath + "/CameraScreenshot.png", byteArray);
+    /*    byte[] byteArray = renderResult.EncodeToPNG();
+        System.IO.File.WriteAllBytes(Application.dataPath + "/CameraScreenshot.png", byteArray); */
 
         RenderTexture.ReleaseTemporary(renderTexture);
         photoCamera.targetTexture = null;

@@ -21,6 +21,20 @@ public class UIController : MonoBehaviour
     [SerializeField] 
     Image batteryLife;
 
+    [SerializeField]
+    TextMeshProUGUI questText;
+
+    [SerializeField]
+    Texture waypointGraphic;
+    bool showWaypoint;
+    Vector3 questWaypoint;
+    float waypointThreshold;
+
+    [SerializeField]
+    RawImage compassUI;
+    [SerializeField]
+    float compassSensitivity;
+
     [SerializeField] 
     GameObject cameraHUD;
     [SerializeField]
@@ -29,6 +43,11 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI targetText;
     [SerializeField]
     RawImage newPhotoUI;
+
+    [SerializeField]
+    TextMeshProUGUI sampleText;
+    [SerializeField]
+    float sampleTextDelay;
 
     [SerializeField] 
     GameObject gameOverScreen;
@@ -83,6 +102,8 @@ public class UIController : MonoBehaviour
         UpdatePauseScreen();
 
         UpdateGameHUD();
+
+        UpdateQuestHUD();
 
         UpdateCameraHUD();
 
@@ -157,7 +178,66 @@ public class UIController : MonoBehaviour
             }
 
         }
+
+        compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f) + .25f, 0f, compassUI.uvRect.width, 1);
+
         gameHUD.SetActive(inGame);
+    }
+
+    void UpdateQuestHUD()
+    {
+        string finalText = "";
+
+        Quest quest = QuestController.instance.currentQuest;
+
+        if (quest != null)
+        {
+            string targetText = quest.targetName;
+
+            switch (quest.questData.questType)
+            {
+                case (QuestType.Photo):
+                    {
+                        finalText = "Take a photo of " + targetText;
+                        break;
+                    }
+
+                case (QuestType.Repair):
+                    {
+                        finalText = "Find and repair " + targetText;
+                        break;
+                    }
+
+                case (QuestType.Sample):
+                    {
+                        finalText = "Take a sample of " + targetText;
+                        break;
+                    }
+            }
+
+            showWaypoint = false;
+
+            if (roverCamera != null)
+            {
+                if (roverCamera.CheckVisionOfTarget(quest.questLocation, 80f))
+                {
+                    questWaypoint = roverController.fpsCamera.WorldToScreenPoint(quest.questLocation);
+                    showWaypoint = true;
+                }
+            }
+            
+        }
+
+        questText.text = finalText;
+    }
+
+    private void OnGUI()
+    {
+        if (showWaypoint)
+        {
+            GUI.color = Color.white;
+            GUI.Label(new Rect(questWaypoint.x, Screen.height - questWaypoint.y, 100, 20), waypointGraphic);
+        }
     }
 
     void UpdateCameraHUD()
@@ -206,7 +286,21 @@ public class UIController : MonoBehaviour
     public void DeleteNewPhoto()
     {
         newPhotoUI.texture = null;
-        newPhotoUI.gameObject.SetActive(false); 
+        newPhotoUI.gameObject.SetActive(false);
+    }
+
+    public void ChangeSampleText(string sampleName)
+    {
+        CancelInvoke("RemoveSampleText");
+
+        sampleText.text = sampleName;
+
+        Invoke("RemoveSampleText", sampleTextDelay);
+    }
+
+    void RemoveSampleText()
+    {
+        sampleText.text = "";
     }
 
     void UpdateGameOverScreen()

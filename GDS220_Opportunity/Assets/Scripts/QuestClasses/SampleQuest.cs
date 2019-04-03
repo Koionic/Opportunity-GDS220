@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class FetchQuest : Quest
+public class SampleQuest : Quest
 {
     [SerializeField]
     Vector3 targetArea;
 
+    [SerializeField]
     float targetThreshold;
 
     bool inTargetArea;
@@ -22,7 +23,6 @@ public class FetchQuest : Quest
     public override void QuestUpdate()
     {
         CheckPlayerLocation();
-
     }
 
     void CheckPlayerLocation()
@@ -36,6 +36,14 @@ public class FetchQuest : Quest
         else
         {
             inTargetArea = false;
+        }
+    }
+
+    public override void CheckSample(SampleData sample)
+    {
+        if (inTargetArea)
+        {
+            EndQuest();
         }
     }
 }

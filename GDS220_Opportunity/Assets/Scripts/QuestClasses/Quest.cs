@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum QuestType { Photo, Collect, Repair, Null };
+public enum QuestType { Photo, Sample, Repair, Null };
 
 public class Quest : ScriptableObject
 {
     public QuestData questData;
 
     public UnityEvent<QuestData> QuestCompleted;
+
+    public Vector3 questLocation;
+
+    public string targetName;
 
     public virtual void StartQuest()
     {
@@ -31,6 +35,11 @@ public class Quest : ScriptableObject
 
     }
 
+    public virtual void CheckSample(SampleData sample)
+    {
+
+    }
+
     public virtual Transform GetPhotoTarget()
     {
         return null;
@@ -38,6 +47,7 @@ public class Quest : ScriptableObject
 
     public void EndQuest()
     {
+
         QuestController.instance.CompleteQuest(questData);
     }
 }

@@ -37,6 +37,8 @@ public class QuestController : MonoBehaviour
         if (currentQuest != null)
         {
             currentQuest.QuestUpdate();
+
+
         }
     }
 
@@ -59,6 +61,16 @@ public class QuestController : MonoBehaviour
     {
         print("questcontroller sending");
         currentQuest.CheckPhoto(texture, correct);
+    }
+
+    public void SendSample(SampleData sample)
+    {
+        UIController.instance.ChangeSampleText(sample.sampleType.ToString());
+
+        if (currentQuestType == QuestType.Sample)
+        {
+            currentQuest.CheckSample(sample);
+        }
     }
 
     public void CompleteQuest(QuestData completedQuestData)

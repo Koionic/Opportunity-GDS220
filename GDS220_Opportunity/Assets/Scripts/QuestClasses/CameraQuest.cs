@@ -30,6 +30,8 @@ public class CameraQuest : Quest
             if (Input.GetKeyDown(KeyCode.N))
             {
                 UIController.instance.DeleteNewPhoto();
+                potentialPhotoCorrect = false;
+                potentialPhoto = false;
             }
         }
     }

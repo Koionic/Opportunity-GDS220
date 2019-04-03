@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee7026fca8f6e4ed5864d01c8511e692, type: 3}
-  m_Name: CameraQuest01
+  m_Script: {fileID: 11500000, guid: b7fd56dad684a45519d71983e5dfddb8, type: 3}
+  m_Name: SampleQuest01
   m_EditorClassIdentifier: 
   questData:
-    isActive: 1
+    isActive: 0
     isCompleted: 0
     gcBias: 0
     scBias: 0
-    questType: 0
-  questLocation: {x: 10, y: 7, z: 65}
-  targetName: The Gold Cube
-  photoTarget: {fileID: 3603542831645384710, guid: 522053abd0e6745a983240a1ad00c9c0,
-    type: 3}
+    questType: 1
+  questLocation: {x: 0, y: 5, z: 50}
+  targetName: The Cube Thing
+  targetArea: {x: 0, y: 0, z: 50}
+  targetThreshold: 20

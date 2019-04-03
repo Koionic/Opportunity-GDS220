@@ -38,6 +38,11 @@ public class RoverController : MonoBehaviour
     [SerializeField]
     float batteryDepleteRate = .5f;
 
+    [SerializeField]
+    Transform sampleOrigin;
+    [SerializeField]
+    float sampleDistance;
+
     public RoverStats stats;
 
     public static RoverController instance;
@@ -76,6 +81,8 @@ public class RoverController : MonoBehaviour
         {
             DepleteBattery();
         }
+
+
 
         ProcessInputs();
 
@@ -118,6 +125,22 @@ public class RoverController : MonoBehaviour
             {
                 fpsCamera.fieldOfView = 90f;
                 FreezeRoverStates(FreezeType.Movement, false);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0) && !cameraMode)
+        {
+            Ray sampleRay = new Ray(sampleOrigin.transform.position, sampleOrigin.transform.forward);
+            RaycastHit raycastHit;
+
+            if (Physics.Raycast(sampleRay, out raycastHit, sampleDistance))
+            {
+                SampleData sample = raycastHit.collider.GetComponent<SampleData>();
+                if (sample != null && QuestController.instance != null)
+                {
+                    QuestController.instance.SendSample(sample);
+                }
+
             }
         }
 
