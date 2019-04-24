@@ -12,17 +12,13 @@ public class Quest : ScriptableObject
     public UnityEvent<QuestData> QuestCompleted;
 
     public Vector3 questLocation;
+    public GameObject questPrefab;
 
     public string targetName;
 
     public virtual void StartQuest()
     {
         questData.isActive = true;
-    }
-
-    void Update()
-    {
-
     }
 
     public virtual void QuestUpdate()
@@ -40,14 +36,8 @@ public class Quest : ScriptableObject
 
     }
 
-    public virtual Transform GetPhotoTarget()
-    {
-        return null;
-    }
-
     public void EndQuest()
     {
-
         QuestController.instance.CompleteQuest(questData);
     }
 }

@@ -19,13 +19,18 @@ public class UIController : MonoBehaviour
     [SerializeField] 
     GameObject gameHUD;
     [SerializeField] 
-    Image batteryLife;
+    RawImage batteryIndicator;
+    [SerializeField]
+    Texture2D[] batteryLifePics;
+    [SerializeField]
+    TextMeshProUGUI batteryLifeText;
 
     [SerializeField]
     TextMeshProUGUI questText;
 
     [SerializeField]
-    Texture waypointGraphic;
+    RawImage waypointGraphic;
+
     bool showWaypoint;
     Vector3 questWaypoint;
     float waypointThreshold;
@@ -165,80 +170,119 @@ public class UIController : MonoBehaviour
     {
         if (inGame)
         {
-            float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
-            batteryLife.fillAmount = batteryPercentage;
+            compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f), 0f, 1, 1);
 
-            if (batteryLife.fillAmount > 0.5f)
+            float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
+            batteryLifeText.text = batteryPercentage.ToString("P1");
+
+            if (batteryPercentage <= 0f)
             {
-                batteryLife.color = new Color((1f - batteryPercentage) * 2f, 1f, 0f);
+                batteryIndicator.texture = batteryLifePics[0];
             }
-            else
+            else if (batteryPercentage <= 0.20f)
             {
-                batteryLife.color = new Color(1f, batteryPercentage * 2f, 0f);
+                batteryIndicator.texture = batteryLifePics[1];
+            }
+            else if (batteryPercentage <= 0.40f)
+            {
+                batteryIndicator.texture = batteryLifePics[2];
+            }
+            else if (batteryPercentage <= 0.60f)
+            {
+                batteryIndicator.texture = batteryLifePics[3];
+            }
+            else if (batteryPercentage <= 0.80f)
+            {
+                batteryIndicator.texture = batteryLifePics[4];
+            }
+            else if (batteryPercentage <= 1f)
+            {
+                batteryIndicator.texture = batteryLifePics[5];
             }
 
         }
-
-        compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f) + .25f, 0f, compassUI.uvRect.width, 1);
 
         gameHUD.SetActive(inGame);
     }
 
     void UpdateQuestHUD()
     {
-        string finalText = "";
 
         Quest quest = QuestController.instance.currentQuest;
 
         if (quest != null)
         {
-            string targetText = quest.targetName;
+            Vector3 normalisedHeading = roverController.fpsCamera.transform.forward;
+            Vector2 normalisedHorizontalHeading = new Vector2(normalisedHeading.x, normalisedHeading.z);
 
-            switch (quest.questData.questType)
+            Vector3 normalisedTargetVector = (quest.questLocation - roverController.fpsCamera.transform.position).normalized;
+            Vector2 normalisedHorizontalTargetVector = new Vector2(normalisedTargetVector.x, normalisedTargetVector.z);
+
+            float questAngle = Vector2.SignedAngle(normalisedHorizontalHeading, normalisedHorizontalTargetVector);
+
+            if (waypointGraphic.enabled)
             {
-                case (QuestType.Photo):
-                    {
-                        finalText = "Take a photo of " + targetText;
-                        break;
-                    }
-
-                case (QuestType.Repair):
-                    {
-                        finalText = "Find and repair " + targetText;
-                        break;
-                    }
-
-                case (QuestType.Sample):
-                    {
-                        finalText = "Take a sample of " + targetText;
-                        break;
-                    }
+                waypointGraphic.uvRect = new Rect((questAngle / 360f), 0, 1, 1);
             }
-
-            showWaypoint = false;
 
             if (roverCamera != null)
             {
                 if (roverCamera.CheckVisionOfTarget(quest.questLocation, 80f))
                 {
                     questWaypoint = roverController.fpsCamera.WorldToScreenPoint(quest.questLocation);
-                    showWaypoint = true;
                 }
             }
             
+        }
+    }
+
+    public void StartQuestUI(Quest quest)
+    {
+        waypointGraphic.enabled = true;
+
+        string finalText = "";
+
+        string questTargetText = quest.targetName;
+
+        switch (quest.questData.questType)
+        {
+            case (QuestType.Photo):
+                finalText = "Take a photo of " + questTargetText;
+
+                waypointGraphic.color = Color.white;
+                break;
+
+            case (QuestType.Repair):
+                finalText = "Find and repair " + questTargetText;
+
+                waypointGraphic.color = Color.green;
+                break;
+
+            case (QuestType.Sample):
+                finalText = "Take a sample of " + questTargetText;
+
+                waypointGraphic.color = Color.blue;
+                break;
         }
 
         questText.text = finalText;
     }
 
-    private void OnGUI()
+    public void FinishQuestUI(Quest quest)
     {
-        if (showWaypoint)
-        {
-            GUI.color = Color.white;
-            GUI.Label(new Rect(questWaypoint.x, Screen.height - questWaypoint.y, 100, 20), waypointGraphic);
-        }
+        questText.text = "";
+
+        waypointGraphic.enabled = false;
     }
+
+    /*   private void OnGUI()
+       {
+           if (showWaypoint)
+           {
+               GUI.color = Color.white;
+               GUI.Label(new Rect(questWaypoint.x, Screen.height - questWaypoint.y, 100, 20), waypointGraphic);
+           }
+       } */
 
     void UpdateCameraHUD()
     {

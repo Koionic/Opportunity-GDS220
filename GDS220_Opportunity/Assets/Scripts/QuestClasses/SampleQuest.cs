@@ -22,6 +22,7 @@ public class SampleQuest : Quest
     // Update is called once per frame
     public override void QuestUpdate()
     {
+        base.QuestUpdate();
         CheckPlayerLocation();
     }
 

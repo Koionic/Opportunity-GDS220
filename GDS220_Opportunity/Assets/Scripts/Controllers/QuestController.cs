@@ -14,6 +14,20 @@ public class QuestController : MonoBehaviour
 
     int currentQuestIndex;
 
+    [SerializeField]
+    float questObjectSpawnDistance;
+    GameObject questObject;
+    public GameObject spawnedObject;
+
+    Vector3 playerLocation;
+    Vector2 playerLocationV2;
+
+
+    float distanceFromQuest;
+    
+    Vector2 currentQuestLocationV2;
+
+
     public static QuestController instance = null;
 
     private void Awake()
@@ -34,11 +48,52 @@ public class QuestController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentQuest != null)
+        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
         {
-            currentQuest.QuestUpdate();
+
+            if (currentQuest != null)
+            {
+                currentQuest.QuestUpdate();
+            }
 
 
+            playerLocation = GameController.instance.roverController.stats.currentPosition;
+
+            playerLocationV2 = new Vector2(playerLocation.x, playerLocation.z);
+
+            distanceFromQuest = (currentQuestLocationV2 - playerLocationV2).magnitude;
+
+            if (distanceFromQuest <= questObjectSpawnDistance)
+            {
+                if (currentQuest != null)
+                {
+                    if (spawnedObject == null)
+                    {
+                        spawnedObject = Instantiate(currentQuest.questPrefab, currentQuest.questLocation, Quaternion.identity);
+                        questObject = spawnedObject;
+                    }
+                    else if (!spawnedObject.activeSelf)
+                    {
+                        spawnedObject.SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                if (currentQuest != null && spawnedObject != null)
+                {
+                    if (spawnedObject == questObject && spawnedObject.activeSelf)
+                    {
+                        spawnedObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    Destroy(spawnedObject);
+                    spawnedObject = null;
+                    questObject = null;
+                }
+            }
         }
     }
 
@@ -52,6 +107,10 @@ public class QuestController : MonoBehaviour
                 currentQuest = quests[currentQuestIndex];
                 currentQuest.StartQuest();
                 currentQuestType = currentQuest.questData.questType;
+                currentQuestLocationV2 = new Vector2(currentQuest.questLocation.x, currentQuest.questLocation.z);
+
+
+                UIController.instance.StartQuestUI(currentQuest);
                 break;
             }
         }
@@ -75,6 +134,8 @@ public class QuestController : MonoBehaviour
 
     public void CompleteQuest(QuestData completedQuestData)
     {
+        UIController.instance.FinishQuestUI(currentQuest);
+
         currentQuest.questData.isCompleted = true;
         currentQuest.questData.isActive = false;
         currentQuest = null;

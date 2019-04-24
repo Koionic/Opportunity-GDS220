@@ -19,6 +19,8 @@ MonoBehaviour:
     scBias: 0
     questType: 0
   questLocation: {x: 10, y: 7, z: 65}
+  questPrefab: {fileID: 3603542831645384706, guid: 522053abd0e6745a983240a1ad00c9c0,
+    type: 3}
   targetName: The Gold Cube
   photoTarget: {fileID: 3603542831645384710, guid: 522053abd0e6745a983240a1ad00c9c0,
     type: 3}

@@ -52,12 +52,14 @@ public class PhotoCamera : MonoBehaviour
             {
                 if (QuestController.instance.currentQuestType == QuestType.Photo)
                 {
-                    cameraTarget = GameObject.FindWithTag("CameraTarget").transform;
-
                     if (cameraTarget != null)
                     {
                         CheckLineOfSight();
                         targetInView = CheckVisionOfTarget(cameraTarget.position, roverCamera.fieldOfView - viewportMargin);
+                    }
+                    else
+                    {
+                        cameraTarget = QuestController.instance.spawnedObject.transform;
                     }
                 }
             }
@@ -107,7 +109,6 @@ public class PhotoCamera : MonoBehaviour
         //checks if anything is in the players direction
         if (Physics.SphereCast(roverCamera.transform.position, losRadius, roverCamera.transform.forward, out raycast))
         {
-            print(raycast.collider.name);
             //sets the bool to true if the player is hit by the ray
             if (raycast.collider.CompareTag("CameraTarget") && raycast.collider.gameObject == cameraTarget.gameObject)
             {

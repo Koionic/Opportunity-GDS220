@@ -17,7 +17,8 @@ public class CameraQuest : Quest
     // Update is called once per frame
     public override void QuestUpdate()
     {
-        Debug.Log("updating");
+        base.QuestUpdate();
+
         if (potentialPhoto)
         {
             if (Input.GetKeyDown(KeyCode.Y))
@@ -41,10 +42,5 @@ public class CameraQuest : Quest
         potentialPhoto = true;
         potentialPhotoCorrect = correct;
         UIController.instance.ShowNewPhoto(newPhoto);
-    }
-
-    public override Transform GetPhotoTarget()
-    {
-        return photoTarget;
     }
 }

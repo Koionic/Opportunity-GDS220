@@ -28,8 +28,8 @@ public class TerrainGenerator : MonoBehaviour
     float meshWorldSize;
     int chunksVisibleInViewDist;
 
-    int currentChunkCoordX;
-    int currentChunkCoordY;
+    public int currentChunkCoordX;
+    public int currentChunkCoordY;
 
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
     List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
