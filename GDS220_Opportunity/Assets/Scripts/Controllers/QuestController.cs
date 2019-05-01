@@ -52,8 +52,11 @@ public class QuestController : MonoBehaviour
 
     public void ResetAllMainQuests()
     {
+        mainQuest = null;
+
         for (int i = 0; i < mainQuests.Length; i++)
         {
+            mainQuests[i].questData.isActive = false;
             mainQuests[i].questData.isCompleted = false;
             mainQuests[i].questData.success = false;
         }
@@ -124,7 +127,7 @@ public class QuestController : MonoBehaviour
 
         if (completedQuest.spawnedObject != null)
         {
-            GameController.instance.AddObjectToDeleteList(completedQuest.spawnedObject);
+            GameController.instance.AddObjectToDeleteList(completedQuest.spawnedObject.gameObject);
         }
 
         completedQuest.questData.isCompleted = true;

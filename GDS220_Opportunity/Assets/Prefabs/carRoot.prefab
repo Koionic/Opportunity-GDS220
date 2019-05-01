@@ -99,7 +99,7 @@ MonoBehaviour:
   maxZoom: 90
   zoomSpeed: 60
   zoomPercent: 0
-  viewportMargin: 30
+  viewportMargin: 20
   losRadius: 1
   distanceMargin: 50
   distanceModifier: 30

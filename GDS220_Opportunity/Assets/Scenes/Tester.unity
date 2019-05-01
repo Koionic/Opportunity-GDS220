@@ -112,6 +112,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &239272670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239272671}
+  m_Layer: 0
+  m_Name: ObjectContainer
+  m_TagString: ObjectContainer
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &239272671
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239272670}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6, z: 70}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &811000718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -525,7 +555,7 @@ PrefabInstance:
     - target: {fileID: 1105005164, guid: 648beaa19db054b18bdc0a3bf7046609, type: 3}
       propertyPath: cameraTarget
       value: 
-      objectReference: {fileID: 1654902795}
+      objectReference: {fileID: 0}
     - target: {fileID: 8352777406576889347, guid: 648beaa19db054b18bdc0a3bf7046609,
         type: 3}
       propertyPath: m_SuspensionSpring.spring
@@ -632,7 +662,7 @@ GameObject:
   - component: {fileID: 1654902792}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: CameraTarget
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

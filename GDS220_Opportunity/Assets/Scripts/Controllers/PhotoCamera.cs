@@ -19,6 +19,8 @@ public class PhotoCamera : MonoBehaviour
     [SerializeField]
     float distanceMargin, distanceModifier;
 
+    float angle;
+
     Camera roverCamera;
 
     Camera photoCamera;
@@ -86,9 +88,12 @@ public class PhotoCamera : MonoBehaviour
     public bool CheckVisionOfTarget(Vector3 target, float searchAngle)
     {
         //creates a vector to compare against the vector between the player and the target
-        float angle = Maths.GetAngle(roverCamera.transform, target);
+        angle = Maths.GetAngle(roverCamera.transform, target);
 
-        if (angle < searchAngle)
+        float viewportModifier = viewportMargin * (1f - zoomPercent);
+        print(viewportModifier);
+
+        if (angle < searchAngle - viewportModifier)
         {
             return true;
         }

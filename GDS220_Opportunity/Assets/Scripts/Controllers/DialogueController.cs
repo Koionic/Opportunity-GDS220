@@ -26,12 +26,7 @@ public class DialogueController : MonoBehaviour
     {
         string path = Application.dataPath + "/SocialMediaDialogue/TestDialogue.txt";
 
-        string[] dialogues = File.ReadAllLines(path);
-
-        for (int i = 0; i < dialogues.Length; i++)
-        {
-            dialogueStrings.Add(dialogues[i]);
-        }
+        GrabTextFromFile("/SocialMediaDialogue/TestDialogue", dialogueStrings);
 
         if (dialogueStrings.Count > 0)
         {
@@ -46,6 +41,22 @@ public class DialogueController : MonoBehaviour
         {
             ChooseRandomText();
         }
+    }
+
+    void GrabTextFromFile(string dataPath, List<string> dialogueArray)
+    {
+        string path = Application.dataPath + dataPath + ".txt";
+
+        string[] dialogues = File.ReadAllLines(path);
+
+        if (dialogues.Length > 0)
+        {
+            for (int i = 0; i < dialogues.Length; i++)
+            {
+                dialogueArray.Add(dialogues[i]);
+            }
+        }
+
     }
 
     public void QueueGCDialogue(string toBeQueued)
@@ -67,5 +78,15 @@ public class DialogueController : MonoBehaviour
         socialMediaStream.AddToQueue(dialogueKey);
 
         dialogueStrings.Remove(dialogueKey);
+    }
+
+    public void ResetStreams()
+    {
+        dialogueStrings.Clear();
+
+        socialMediaStream.ClearStream();
+        groundControlStream.ClearStream();
+
+        GrabTextFromFile("/SocialMediaDialogue/TestDialogue", dialogueStrings);
     }
 }

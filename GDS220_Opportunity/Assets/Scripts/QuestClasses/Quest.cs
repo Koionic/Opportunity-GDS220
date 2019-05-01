@@ -15,7 +15,7 @@ public class Quest : ScriptableObject
     public Vector3 questLocation;
     public GameObject questPrefab;
 
-    public GameObject spawnedObject;
+    public QuestTarget spawnedObject;
 
     [SerializeField]
     float questObjectSpawnDistance;
@@ -43,20 +43,20 @@ public class Quest : ScriptableObject
         {
             if (spawnedObject != null)
             {
-                spawnedObject.SetActive(true);
+                spawnedObject.gameObject.SetActive(true);
             }
             else
             {
-                spawnedObject = Instantiate(questPrefab, questLocation, Quaternion.identity, QuestController.instance.transform);
+                spawnedObject = Instantiate(questPrefab, questLocation, Quaternion.identity, GameObject.FindWithTag("ObjectContainer").transform).GetComponent<QuestTarget>();
             }
         }
         else
         {
             if (spawnedObject != null)
             {
-                if (spawnedObject.activeSelf)
+                if (spawnedObject.gameObject.activeSelf)
                 {
-                    spawnedObject.SetActive(false);
+                    spawnedObject.gameObject.SetActive(false);
                 }
             }
         }

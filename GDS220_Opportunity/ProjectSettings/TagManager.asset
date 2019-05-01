@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CameraTarget
   - SampleTarget
+  - ObjectContainer
   layers:
   - Default
   - TransparentFX

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum SampleType { Aluminium, Iron, Magnesium, Potassium };
 
-public class SampleData : MonoBehaviour
+public class SampleData : QuestTarget
 {
     public SampleType sampleType;
 }

@@ -52,6 +52,7 @@ public class GameController : MonoBehaviour
     {
         LoadingController.instance.StartFakeLoadingScreen();
         PrepareRover();
+        DialogueController.instance.ResetStreams();
         QuestController.instance.ResetAllMainQuests();
     }
 

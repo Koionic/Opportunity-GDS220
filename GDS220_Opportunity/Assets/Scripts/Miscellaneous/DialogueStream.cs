@@ -71,6 +71,17 @@ public class DialogueStream : MonoBehaviour
         }
     }
 
+    public void ClearStream()
+    {
+        foreach (TextMeshProUGUI textMesh in stream)
+        {
+            Destroy(textMesh.gameObject);
+        }
+
+        stream.Clear();
+        queue.Clear();
+    }
+
     IEnumerator ResetToBottom()
     {
         yield return null;

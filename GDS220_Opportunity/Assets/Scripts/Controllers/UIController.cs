@@ -358,6 +358,10 @@ public class UIController : MonoBehaviour
 
             cameraHUD.SetActive(roverController.cameraMode);
         }
+        else
+        {
+            cameraHUD.SetActive(false);
+        }
     }
 
     public void ShowNewPhoto(Texture2D newPhotoTexture)
