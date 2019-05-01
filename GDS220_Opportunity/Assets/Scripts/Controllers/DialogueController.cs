@@ -8,7 +8,18 @@ public class DialogueController : MonoBehaviour
     List<string> dialogueStrings = new List<string>();
 
     [SerializeField]
-    DialogueStream socialMediaStream;
+    DialogueStream groundControlStream, socialMediaStream;
+
+    public static DialogueController instance = null;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+
+        else if (instance != this)
+            Destroy(this);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +46,16 @@ public class DialogueController : MonoBehaviour
         {
             ChooseRandomText();
         }
+    }
+
+    public void QueueGCDialogue(string toBeQueued)
+    {
+        groundControlStream.AddToQueue(toBeQueued);
+    }
+
+    public void QueueSMDialogue(string toBeQueued)
+    {
+        socialMediaStream.AddToQueue(toBeQueued);
     }
 
     void ChooseRandomText()

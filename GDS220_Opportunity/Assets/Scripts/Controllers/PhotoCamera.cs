@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VectorMaths;
 
 public class PhotoCamera : MonoBehaviour
 {
@@ -50,7 +51,9 @@ public class PhotoCamera : MonoBehaviour
 
             if (QuestController.instance != null)
             {
-                if (QuestController.instance.currentQuestType == QuestType.Photo)
+                Quest cameraQuest = QuestController.instance.ActiveQuestOfType(typeof(CameraQuest));
+
+                if (cameraQuest != null)
                 {
                     if (cameraTarget != null)
                     {
@@ -59,14 +62,12 @@ public class PhotoCamera : MonoBehaviour
                     }
                     else
                     {
-                        cameraTarget = QuestController.instance.spawnedObject.transform;
+                        if (cameraQuest.spawnedObject != null)
+                        {
+                            cameraTarget = cameraQuest.spawnedObject.transform;
+                        }
                     }
                 }
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                TriggerPhoto(Screen.width, Screen.height);
             }
         }
     }
@@ -85,11 +86,7 @@ public class PhotoCamera : MonoBehaviour
     public bool CheckVisionOfTarget(Vector3 target, float searchAngle)
     {
         //creates a vector to compare against the vector between the player and the target
-        Vector3 normalisedHeading = roverCamera.transform.forward;
-        Vector3 normalisedTargetVector = (target - roverCamera.transform.position).normalized;
-        float dotProduct = Vector3.Dot(normalisedHeading, normalisedTargetVector);
-        float angle = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
-
+        float angle = Maths.GetAngle(roverCamera.transform, target);
 
         if (angle < searchAngle)
         {
@@ -110,7 +107,7 @@ public class PhotoCamera : MonoBehaviour
         if (Physics.SphereCast(roverCamera.transform.position, losRadius, roverCamera.transform.forward, out raycast))
         {
             //sets the bool to true if the player is hit by the ray
-            if (raycast.collider.CompareTag("CameraTarget") && raycast.collider.gameObject == cameraTarget.gameObject)
+            if (raycast.collider.CompareTag("CameraTarget"))
             {
                 targetObscured = false;
 
@@ -142,7 +139,7 @@ public class PhotoCamera : MonoBehaviour
         }
     }
 
-    private void TriggerPhoto(int width, int height)
+    public void TriggerPhoto(int width, int height)
     {
         photoCamera.fieldOfView = roverCamera.fieldOfView;
         photoCamera.transform.rotation = roverCamera.transform.rotation;
@@ -163,15 +160,17 @@ public class PhotoCamera : MonoBehaviour
 
         if (QuestController.instance != null)
         {
-            if (QuestController.instance.currentQuestType == QuestType.Photo)
+            if (QuestController.instance.ActiveQuestOfType(typeof(CameraQuest)) != null)
             {
                 bool correct = targetInView && targetInRange && !targetObscured;
+
+                print(correct);
 
                 Texture2D photo = renderResult;
 
                 photo.Apply();
 
-                QuestController.instance.currentQuest.CheckPhoto(photo, correct);
+                QuestController.instance.SendPhoto(photo, correct);
             }
         }
 

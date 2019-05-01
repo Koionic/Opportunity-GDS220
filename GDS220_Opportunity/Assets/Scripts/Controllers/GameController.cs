@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VectorMaths;
 
 public class GameController : MonoBehaviour
 {
-
     bool isPaused = false;
     bool gameOver = false;
 
@@ -17,6 +17,10 @@ public class GameController : MonoBehaviour
 
     [SerializeField]
     RoverStats savedRoverStats;
+
+    List<GameObject> deleteQueue = new List<GameObject>();
+    [SerializeField]
+    float despawnDistance;
 
     bool quickSaveReady;
     float quickSaveTimer = 0f;
@@ -41,7 +45,14 @@ public class GameController : MonoBehaviour
     {
         roverController.FreezeRoverStates(RoverController.FreezeType.All, false);
 
-        QuestController.instance.StartNewQuest();
+        QuestController.instance.StartNewMainQuest();
+    }
+
+    void RestartGame()
+    {
+        LoadingController.instance.StartFakeLoadingScreen();
+        PrepareRover();
+        QuestController.instance.ResetAllMainQuests();
     }
 
     void EndLevel()
@@ -57,6 +68,42 @@ public class GameController : MonoBehaviour
         {
             quickSaveTimer += Time.deltaTime;
             quickSaveReady = quickSaveTimer >= quickSaveDelayInMinutes * 60f;
+
+            if (deleteQueue.Count > 0)
+            {
+                CheckObjectsToBeDeleted();
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                RestartGame();
+            }
+        }
+    }
+
+    public void AddObjectToDeleteList(GameObject obj)
+    {
+        deleteQueue.Add(obj);
+    }
+
+    void CheckObjectsToBeDeleted()
+    {
+        List<GameObject> objsToBeDeleted = new List<GameObject>();
+
+        foreach (GameObject obj in deleteQueue)
+        {
+            float distance = Maths.GetDistance(roverController.transform.position, obj.transform.position);
+
+            if (distance >= despawnDistance)
+            {
+                objsToBeDeleted.Add(obj);
+            }
+        }
+
+        foreach (GameObject obj in objsToBeDeleted)
+        {
+            deleteQueue.Remove(obj);
+            Destroy(obj);
         }
     }
 
@@ -102,15 +149,18 @@ public class GameController : MonoBehaviour
         Vector3 spawnPoint = savedRoverStats.lastSavedPosition;
         if (newLevel)
         {
-            spawnPoint = LevelDataHolder.instance.levelData[LevelDataHolder.instance.currentLevel].levelStats.lastSavedPosition;
+            LevelData levelData = LevelDataHolder.instance.levelData[LevelDataHolder.instance.currentLevel];
+            spawnPoint = levelData.levelStats.lastSavedPosition;
             newLevel = false;
         }
 
-
         roverController = RoverController.instance;
         roverController.gameObject.transform.position = spawnPoint;
+        roverController.cameraMode = false;
 
         roverController.FreezeRoverStates(RoverController.FreezeType.All, true);
+
+        roverController.OutOfBattery.RemoveListener(EndLevel);
         roverController.OutOfBattery.AddListener(EndLevel);
 
         savedRoverStats.currentPosition = spawnPoint;

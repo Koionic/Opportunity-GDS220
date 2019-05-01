@@ -5,19 +5,12 @@ using UnityEngine;
 public class QuestController : MonoBehaviour
 {
     [SerializeField]
-    Quest[] quests;
+    Quest[] mainQuests;
 
-    public Quest currentQuest;
-
-    public QuestType previousQuestType;
-    public QuestType currentQuestType;
+    public Quest mainQuest;
+    public Quest socialQuest1, socialQuest2;
 
     int currentQuestIndex;
-
-    [SerializeField]
-    float questObjectSpawnDistance;
-    GameObject questObject;
-    public GameObject spawnedObject;
 
     Vector3 playerLocation;
     Vector2 playerLocationV2;
@@ -50,96 +43,123 @@ public class QuestController : MonoBehaviour
     {
         if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
         {
-
-            if (currentQuest != null)
+            if (mainQuest != null)
             {
-                currentQuest.QuestUpdate();
-            }
-
-
-            playerLocation = GameController.instance.roverController.stats.currentPosition;
-
-            playerLocationV2 = new Vector2(playerLocation.x, playerLocation.z);
-
-            distanceFromQuest = (currentQuestLocationV2 - playerLocationV2).magnitude;
-
-            if (distanceFromQuest <= questObjectSpawnDistance)
-            {
-                if (currentQuest != null)
-                {
-                    if (spawnedObject == null)
-                    {
-                        spawnedObject = Instantiate(currentQuest.questPrefab, currentQuest.questLocation, Quaternion.identity);
-                        questObject = spawnedObject;
-                    }
-                    else if (!spawnedObject.activeSelf)
-                    {
-                        spawnedObject.SetActive(true);
-                    }
-                }
-            }
-            else
-            {
-                if (currentQuest != null && spawnedObject != null)
-                {
-                    if (spawnedObject == questObject && spawnedObject.activeSelf)
-                    {
-                        spawnedObject.SetActive(false);
-                    }
-                }
-                else
-                {
-                    Destroy(spawnedObject);
-                    spawnedObject = null;
-                    questObject = null;
-                }
+                mainQuest.QuestUpdate();
             }
         }
     }
 
-    public void StartNewQuest()
+    public void ResetAllMainQuests()
     {
-        for (int i = 0; i < quests.Length; i++)
+        for (int i = 0; i < mainQuests.Length; i++)
         {
-            if (!quests[i].questData.isCompleted)
+            mainQuests[i].questData.isCompleted = false;
+            mainQuests[i].questData.success = false;
+        }
+    }
+
+    public void StartNewMainQuest()
+    {
+        Debug.Log("starting quest");
+        for (int i = 0; i < mainQuests.Length; i++)
+        {
+            if (!mainQuests[i].questData.isCompleted && QuestTypeIsAvailable(mainQuests[i].GetType()))
             {
                 currentQuestIndex = i;
-                currentQuest = quests[currentQuestIndex];
-                currentQuest.StartQuest();
-                currentQuestType = currentQuest.questData.questType;
-                currentQuestLocationV2 = new Vector2(currentQuest.questLocation.x, currentQuest.questLocation.z);
+                mainQuest = mainQuests[currentQuestIndex];
+                mainQuest.StartQuest();
 
-
-                UIController.instance.StartQuestUI(currentQuest);
+                UIController.instance.StartQuestUI(mainQuest);
                 break;
             }
         }
     }
 
-    void SendPhoto(Texture2D texture, bool correct)
+    public void SendPhoto(Texture2D texture, bool correct)
     {
-        print("questcontroller sending");
-        currentQuest.CheckPhoto(texture, correct);
+        Quest cameraQuest = ActiveQuestOfType(typeof(CameraQuest));
+
+        if (cameraQuest != null)
+        {
+            cameraQuest.CheckPhoto(texture, correct);
+        }
     }
 
     public void SendSample(SampleData sample)
     {
         UIController.instance.ChangeSampleText(sample.sampleType.ToString());
 
-        if (currentQuestType == QuestType.Sample)
+        Quest sampleQuest = ActiveQuestOfType(typeof(SampleQuest));
+
+        if (sampleQuest != null)
         {
-            currentQuest.CheckSample(sample);
+            sampleQuest.CheckSample(sample);
         }
     }
 
-    public void CompleteQuest(QuestData completedQuestData)
+    bool QuestTypeIsAvailable(System.Type type)
     {
-        UIController.instance.FinishQuestUI(currentQuest);
+        bool isAvailable = true;
 
-        currentQuest.questData.isCompleted = true;
-        currentQuest.questData.isActive = false;
-        currentQuest = null;
-        currentQuestType = QuestType.Null;
+        if (mainQuest != null && mainQuest.GetType() == type)
+        {
+            isAvailable = false;
+        }
+        if (socialQuest1 != null && socialQuest1.GetType() == type)
+        {
+            isAvailable = false;
+        }
+        if (socialQuest2 != null && socialQuest2.GetType() == type)
+        {
+            isAvailable = false;
+        }
+
+        return isAvailable;
+    }
+
+    public void CompleteQuest(Quest completedQuest)
+    {
+        UIController.instance.FinishQuestUI(completedQuest);
+
+        if (completedQuest.spawnedObject != null)
+        {
+            GameController.instance.AddObjectToDeleteList(completedQuest.spawnedObject);
+        }
+
+        completedQuest.questData.isCompleted = true;
+        completedQuest.questData.isActive = false;
+
+        if (mainQuest != null && mainQuest == completedQuest)
+        {
+            mainQuest = null;
+
+            Invoke("StartNewMainQuest", 2f);
+        }
+        else if (socialQuest1 != null && socialQuest1 == completedQuest)
+        {
+            socialQuest1 = null;
+        }
+        else if (socialQuest2 != null && socialQuest2 == completedQuest)
+        {
+            socialQuest2 = null;
+        }
+
+        completedQuest = null;
+    }
+
+    public Quest ActiveQuestOfType(System.Type type)
+    {
+        if (mainQuest != null && mainQuest.GetType() == type)
+            return mainQuest;
+
+        if (socialQuest1 != null && socialQuest1.GetType() == type)
+            return socialQuest1;
+
+        if (socialQuest2 != null && socialQuest2.GetType() == type)
+            return socialQuest2;
+
+        return null;
     }
 
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using VectorMaths;
 
 public class UIController : MonoBehaviour
 {
@@ -26,13 +27,18 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI batteryLifeText;
 
     [SerializeField]
+    TextMeshProUGUI mainQuestText, social1QuestText, social2QuestText;
+
     TextMeshProUGUI questText;
 
+    string finalText = "";
+
     [SerializeField]
-    RawImage waypointGraphic;
+    RawImage cameraWaypoint, sampleWaypoint, repairWaypoint;
+
+    RawImage waypoint;
 
     bool showWaypoint;
-    Vector3 questWaypoint;
     float waypointThreshold;
 
     [SerializeField]
@@ -53,6 +59,15 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI sampleText;
     [SerializeField]
     float sampleTextDelay;
+
+    [SerializeField]
+    GameObject socialMediaPanel, groundControlPanel;
+
+    [SerializeField]
+    RawImage GCtrlSMdia;
+
+    [SerializeField]
+    Texture2D socialMediaSelected, groundControlSelected;
 
     [SerializeField] 
     GameObject gameOverScreen;
@@ -107,8 +122,6 @@ public class UIController : MonoBehaviour
         UpdatePauseScreen();
 
         UpdateGameHUD();
-
-        UpdateQuestHUD();
 
         UpdateCameraHUD();
 
@@ -172,6 +185,10 @@ public class UIController : MonoBehaviour
         {
             compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f), 0f, 1, 1);
 
+            UpdateCompassHUD(typeof(CameraQuest));
+            UpdateCompassHUD(typeof(SampleQuest));
+            UpdateCompassHUD(typeof(RepairQuest));
+
             float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
             batteryLifeText.text = batteryPercentage.ToString("P1");
 
@@ -205,84 +222,106 @@ public class UIController : MonoBehaviour
         gameHUD.SetActive(inGame);
     }
 
-    void UpdateQuestHUD()
+    void UpdateCompassHUD(System.Type type)
     {
-
-        Quest quest = QuestController.instance.currentQuest;
+        Quest quest = QuestController.instance.ActiveQuestOfType(type);
 
         if (quest != null)
         {
-            Vector3 normalisedHeading = roverController.fpsCamera.transform.forward;
-            Vector2 normalisedHorizontalHeading = new Vector2(normalisedHeading.x, normalisedHeading.z);
+            GetQuestUI(type);
 
-            Vector3 normalisedTargetVector = (quest.questLocation - roverController.fpsCamera.transform.position).normalized;
-            Vector2 normalisedHorizontalTargetVector = new Vector2(normalisedTargetVector.x, normalisedTargetVector.z);
-
-            float questAngle = Vector2.SignedAngle(normalisedHorizontalHeading, normalisedHorizontalTargetVector);
-
-            if (waypointGraphic.enabled)
+            if (waypoint != null)
             {
-                waypointGraphic.uvRect = new Rect((questAngle / 360f), 0, 1, 1);
-            }
+                float questAngle = Maths.GetSignedHorizontalAngle(roverController.fpsCamera.transform, quest.questLocation);
 
-            if (roverCamera != null)
-            {
-                if (roverCamera.CheckVisionOfTarget(quest.questLocation, 80f))
-                {
-                    questWaypoint = roverController.fpsCamera.WorldToScreenPoint(quest.questLocation);
-                }
+                waypoint.uvRect = new Rect((questAngle / 360f), 0, 1, 1);
             }
-            
+        }
+        else
+        {
+            GetQuestUI(type);
+
+            waypoint.gameObject.SetActive(false);
+        }
+
+    }
+
+    public void ToggleStream()
+    {
+        if (groundControlPanel.activeSelf)
+        {
+            socialMediaPanel.SetActive(true);
+            groundControlPanel.SetActive(false);
+
+            GCtrlSMdia.texture = socialMediaSelected;
+        }
+        else if (socialMediaPanel.activeSelf)
+        {
+            groundControlPanel.SetActive(true);
+            socialMediaPanel.SetActive(false);
+
+            GCtrlSMdia.texture = groundControlSelected;
         }
     }
 
     public void StartQuestUI(Quest quest)
     {
-        waypointGraphic.enabled = true;
+        GetQuestUI(quest.GetType());
 
-        string finalText = "";
-
-        string questTargetText = quest.targetName;
-
-        switch (quest.questData.questType)
-        {
-            case (QuestType.Photo):
-                finalText = "Take a photo of " + questTargetText;
-
-                waypointGraphic.color = Color.white;
-                break;
-
-            case (QuestType.Repair):
-                finalText = "Find and repair " + questTargetText;
-
-                waypointGraphic.color = Color.green;
-                break;
-
-            case (QuestType.Sample):
-                finalText = "Take a sample of " + questTargetText;
-
-                waypointGraphic.color = Color.blue;
-                break;
-        }
+        waypoint.gameObject.SetActive(true);
 
         questText.text = finalText;
     }
 
     public void FinishQuestUI(Quest quest)
     {
+        GetQuestUI(quest.GetType());
+
         questText.text = "";
 
-        waypointGraphic.enabled = false;
+        waypoint.gameObject.SetActive(false);
     }
 
-    /*   private void OnGUI()
-       {
-           if (showWaypoint)
-           {
-               GUI.color = Color.white;
-               GUI.Label(new Rect(questWaypoint.x, Screen.height - questWaypoint.y, 100, 20), waypointGraphic);
-           }
-       } */
+    void GetQuestUI(System.Type type)
+    {
+        Quest quest = QuestController.instance.ActiveQuestOfType(type);
+
+        string questTargetText = "";
+
+        if (quest != null)
+        {
+            if (quest == QuestController.instance.mainQuest)
+            {
+                questText = mainQuestText;
+            }
+            if (quest == QuestController.instance.socialQuest1)
+            {
+                questText = social1QuestText;
+            }
+            if (quest == QuestController.instance.socialQuest2)
+            {
+                questText = social2QuestText;
+            }
+
+            questTargetText = quest.targetName;
+        }
+
+        if (type == typeof(CameraQuest))
+        {
+            waypoint = cameraWaypoint;
+            finalText = "Take a photo of " + questTargetText;
+        }
+        else if (type == typeof(SampleQuest))
+        {
+            waypoint = sampleWaypoint;
+            finalText = "Take a sample of " + questTargetText;
+        }
+        else if (type == typeof(RepairQuest))
+        {
+            waypoint = repairWaypoint;
+            finalText = "Find and repair " + questTargetText;
+        }
+    }
 
     void UpdateCameraHUD()
     {
@@ -292,7 +331,7 @@ public class UIController : MonoBehaviour
 
             string targetStatus = "";
 
-            if (QuestController.instance.currentQuestType == QuestType.Photo)
+            if (QuestController.instance.ActiveQuestOfType(typeof(CameraQuest)) != null)
             {
                 if (roverCamera.targetInView && roverCamera.targetInRange && !roverCamera.targetObscured)
                 {

@@ -16,9 +16,11 @@ public class LoadingController : MonoBehaviour
     bool instantLoad;
     bool levelIsReady;
 
+    bool fakeLoad;
+
     public static LoadingController instance = null;
 
-    [SerializeField] float loadTime = 5f;
+    [SerializeField] float loadTime = 5f, fakeLoadTime = 3f;
     float loadTimer;
 
     public UnityEvent enteredGame;
@@ -41,28 +43,43 @@ public class LoadingController : MonoBehaviour
         levelHasLoaded = false;
         levelIsReady = false;
         instantLoad = instant;
+        fakeLoad = false;
         loadTimer = 0f;
         StartCoroutine(Loading(scene));
     }
 
+    public void StartFakeLoadingScreen()
+    {
+        loading = true;
+        levelHasLoaded = true;
+        fakeLoad = true;
+
+        instantLoad = false;
+        levelIsReady = false;
+        loadTimer = 0f;
+    }
+
     private void FixedUpdate()
     {
-        if (levelHasLoaded)
+        if (loading)
         {
-            if (instantLoad)
+            if (levelHasLoaded)
             {
-                LeaveLoadingScreen();
-            }
-            else
-            {
-                UpdateLoadingPercent();
-            }
-
-            if (levelIsReady)
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (instantLoad)
                 {
                     LeaveLoadingScreen();
+                }
+                else if (!levelIsReady)
+                {
+                    UpdateLoadingPercent();
+                }
+
+                if (levelIsReady)
+                {
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        LeaveLoadingScreen();
+                    }
                 }
             }
         }
@@ -118,11 +135,20 @@ public class LoadingController : MonoBehaviour
 
     void UpdateLoadingPercent()
     {
-        loadTimer = Time.timeSinceLevelLoad;
+        if (fakeLoad)
+        {
+            loadTimer += Time.deltaTime;
+            loadingProgress = Mathf.InverseLerp(0, fakeLoadTime, loadTimer) * 100;
+        }
+        else
+        {
+            loadTimer = Time.timeSinceLevelLoad;
+            loadingProgress = Mathf.InverseLerp(0, loadTime, loadTimer) * 100;
+        }
 
-        loadingProgress = Mathf.InverseLerp(0, loadTime, loadTimer) * 100;
 
-        if (loadTimer >= loadTime)
+
+        if (loadingProgress >= 98f)
         {
             levelIsReady = true;
         }

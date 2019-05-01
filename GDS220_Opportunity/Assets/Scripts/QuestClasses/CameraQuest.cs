@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CameraQuest : Quest
 {
-    public Transform photoTarget;
-
     bool potentialPhoto, potentialPhotoCorrect;
 
     public override void StartQuest()
@@ -23,10 +21,13 @@ public class CameraQuest : Quest
         {
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                 if (potentialPhotoCorrect)
+                if (potentialPhotoCorrect)
                 {
-                    EndQuest();
+                    questData.success = true;
                 }
+
+                UIController.instance.DeleteNewPhoto();
+                EndQuest();
             }
             if (Input.GetKeyDown(KeyCode.N))
             {

@@ -13,14 +13,19 @@ MonoBehaviour:
   m_Name: SampleQuest01
   m_EditorClassIdentifier: 
   questData:
-    isActive: 0
+    isActive: 1
     isCompleted: 0
+    success: 0
     gcBias: 0
     scBias: 0
-    questType: 1
   questLocation: {x: 0, y: 5, z: 50}
   questPrefab: {fileID: 3479157711906782465, guid: 6067d017576e54842bfc91984c0d1bdc,
     type: 3}
+  spawnedObject: {fileID: 0}
+  questObjectSpawnDistance: 100
   targetName: The Cube Thing
+  startQuestText: yo oppy grab this thing
+  failQuestText: 
+  succeedQuestText: 
   targetArea: {x: 0, y: 0, z: 50}
   targetThreshold: 20

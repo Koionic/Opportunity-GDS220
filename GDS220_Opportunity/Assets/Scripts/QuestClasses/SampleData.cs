@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SampleType { Aluminium, Iron, Magnesium, Titanium };
+public enum SampleType { Aluminium, Iron, Magnesium, Potassium };
 
 public class SampleData : MonoBehaviour
 {

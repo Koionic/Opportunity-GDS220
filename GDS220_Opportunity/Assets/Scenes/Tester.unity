@@ -517,6 +517,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2131110676682106897, guid: 648beaa19db054b18bdc0a3bf7046609,
+        type: 3}
+      propertyPath: batteryDepleteRate
+      value: 0.16
+      objectReference: {fileID: 0}
     - target: {fileID: 1105005164, guid: 648beaa19db054b18bdc0a3bf7046609, type: 3}
       propertyPath: cameraTarget
       value: 

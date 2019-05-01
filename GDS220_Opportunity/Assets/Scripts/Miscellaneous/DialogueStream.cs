@@ -24,6 +24,8 @@ public class DialogueStream : MonoBehaviour
     [SerializeField]
     ScrollRect scrollRect;
 
+    bool newContent;
+
     public void AddToQueue(string newString)
     {
         queue.Add(newString);
@@ -59,14 +61,19 @@ public class DialogueStream : MonoBehaviour
                     Destroy(stream[0]);
                     stream.RemoveAt(0);
                 }
+
+                StartCoroutine(ResetToBottom());
             }
             else
             {
                 stream.RemoveAt(0);
             }
-
-            scrollRect.verticalNormalizedPosition = 0f;
-
         }
+    }
+
+    IEnumerator ResetToBottom()
+    {
+        yield return null;
+        scrollRect.normalizedPosition = Vector2.zero;
     }
 }

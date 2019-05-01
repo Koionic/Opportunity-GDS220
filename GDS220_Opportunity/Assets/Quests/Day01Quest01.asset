@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee7026fca8f6e4ed5864d01c8511e692, type: 3}
-  m_Name: CameraQuest01
+  m_Name: Day01Quest01
   m_EditorClassIdentifier: 
   questData:
-    isActive: 1
+    isActive: 0
     isCompleted: 0
     success: 0
     gcBias: 0
     scBias: 0
-  questLocation: {x: 10, y: 7, z: 65}
+  questLocation: {x: 0, y: 60, z: 0}
   questPrefab: {fileID: 3603542831645384706, guid: 522053abd0e6745a983240a1ad00c9c0,
     type: 3}
   spawnedObject: {fileID: 0}
-  questObjectSpawnDistance: 100
-  targetName: The Gold Cube
-  startQuestText: yo oppy do this thing
+  questObjectSpawnDistance: 300
+  targetName: The Sky
+  startQuestText: Cardinal Direction Misaligned, Capture Current Star Alignment For
+    Calibration
   failQuestText: 
-  succeedQuestText: 
+  succeedQuestText: Compass Calibrated And Online

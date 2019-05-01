@@ -21,6 +21,8 @@ public class RoverController : MonoBehaviour
 
     public Camera fpsCamera;
 
+    PhotoCamera photoCamera;
+
     Rigidbody rb;
 
     public UnityEvent<Texture2D, bool> photoTaken;
@@ -60,6 +62,8 @@ public class RoverController : MonoBehaviour
     {
         wheelDrive = GetComponent<WheelDrive>();
         rb = GetComponent<Rigidbody>();
+
+        photoCamera = GetComponentInChildren<PhotoCamera>();
 
         if (LevelDataHolder.instance != null)
             stats.savedLevel = LevelDataHolder.instance.currentLevel;
@@ -128,20 +132,32 @@ public class RoverController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !cameraMode)
+        if (Input.GetMouseButtonDown(0))
         {
-            Ray sampleRay = new Ray(sampleOrigin.transform.position, sampleOrigin.transform.forward);
-            RaycastHit raycastHit;
-
-            if (Physics.Raycast(sampleRay, out raycastHit, sampleDistance))
+            if (cameraMode)
             {
-                SampleData sample = raycastHit.collider.GetComponent<SampleData>();
-                if (sample != null && QuestController.instance != null)
-                {
-                    QuestController.instance.SendSample(sample);
-                }
-
+                photoCamera.TriggerPhoto(Screen.width, Screen.height);
             }
+            else
+            {
+                Ray sampleRay = new Ray(sampleOrigin.transform.position, sampleOrigin.transform.forward);
+                RaycastHit raycastHit;
+
+                if (Physics.Raycast(sampleRay, out raycastHit, sampleDistance))
+                {
+                    SampleData sample = raycastHit.collider.GetComponent<SampleData>();
+                    if (sample != null && QuestController.instance != null)
+                    {
+                        QuestController.instance.SendSample(sample);
+                    }
+
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            UIController.instance.ToggleStream();
         }
 
         Vector2 movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));

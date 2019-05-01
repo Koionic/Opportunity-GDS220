@@ -19,6 +19,11 @@ public class SampleQuest : Quest
 
     }
 
+    public override void StartQuest()
+    {
+        base.StartQuest();
+    }
+
     // Update is called once per frame
     public override void QuestUpdate()
     {
@@ -44,7 +49,9 @@ public class SampleQuest : Quest
     {
         if (inTargetArea)
         {
-            EndQuest();
+            questData.success = true;
         }
+
+        EndQuest();
     }
 }
