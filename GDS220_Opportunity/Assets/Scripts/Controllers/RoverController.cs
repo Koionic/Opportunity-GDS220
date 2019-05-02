@@ -48,9 +48,14 @@ public class RoverController : MonoBehaviour
     [SerializeField]
     float sampleDistance;
 
+    SampleData sampleData;
+
     public RoverStats stats;
 
     public static RoverController instance;
+
+    float actionProgress = 0f;
+    public bool actionInProgress = false;
 
     void Awake()
     {
@@ -67,6 +72,9 @@ public class RoverController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         photoCamera = GetComponentInChildren<PhotoCamera>();
+
+        fpsCamera.enabled = false;
+        fpsCamera.enabled = true;
 
         if (LevelDataHolder.instance != null)
             stats.savedLevel = LevelDataHolder.instance.currentLevel;
@@ -148,10 +156,11 @@ public class RoverController : MonoBehaviour
 
                 if (Physics.Raycast(sampleRay, out raycastHit, sampleDistance))
                 {
-                    SampleData sample = raycastHit.collider.GetComponent<SampleData>();
-                    if (sample != null && QuestController.instance != null)
+                    sampleData = raycastHit.collider.GetComponent<SampleData>();
+                    if (sampleData != null)
                     {
-                        QuestController.instance.SendSample(sample);
+                        print("start");
+                        StartAction(RoverAction.Sample);
                     }
 
                 }
@@ -202,6 +211,76 @@ public class RoverController : MonoBehaviour
 
         stats.currentPosition = transform.position;
 
+    }
+
+    public enum RoverAction { Repair, Sample };
+
+    IEnumerator ProgressAction(RoverAction roverAction)
+    {
+        switch (roverAction)
+        {
+            case (RoverAction.Repair):
+                while (Input.GetMouseButton(0))
+                {
+                    //UIController.instance.UpdateProgressBar(0f);
+                }
+                break;
+
+            case (RoverAction.Sample):
+                while (true)
+                {
+                    actionProgress += Time.deltaTime;
+                    float percent = Mathf.InverseLerp(0f, sampleData.sampleTime, actionProgress);
+
+                    if (UIController.instance != null)
+                    {
+                        UIController.instance.UpdateProgressBar(percent);
+                    }
+                    print("running");
+
+                    if (Input.GetMouseButtonUp(0) || percent >= .99f)
+                    {
+                        FinishAction(roverAction, percent >= .99f);
+                        yield break;
+                    }
+                    yield return null;
+                }
+        }
+        yield return null;
+    }
+
+    void StartAction(RoverAction roverAction)
+    {
+        if (!actionInProgress)
+        {
+            actionInProgress = true;
+            actionProgress = 0f;
+
+            StartCoroutine(ProgressAction(roverAction));
+        }
+    }
+
+    void FinishAction(RoverAction roverAction, bool complete)
+    {
+        actionInProgress = false;
+
+        if (complete && QuestController.instance != null)
+        {
+            switch (roverAction)
+            {
+                case (RoverAction.Repair):
+                    {
+
+                    }
+                    break;
+
+                case (RoverAction.Sample):
+                    {
+                        QuestController.instance.SendSample(sampleData);
+                    }
+                    break;
+            }
+        }
     }
 
     public void ToggleCameraMode(bool on)

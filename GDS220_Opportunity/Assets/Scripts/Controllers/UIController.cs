@@ -63,6 +63,9 @@ public class UIController : MonoBehaviour
     float sampleTextDelay;
 
     [SerializeField]
+    Image progressBar;
+
+    [SerializeField]
     GameObject socialMediaPanel, groundControlPanel;
 
     [SerializeField]
@@ -196,6 +199,8 @@ public class UIController : MonoBehaviour
                 UpdateCompassHUD(typeof(SampleQuest));
                 UpdateCompassHUD(typeof(RepairQuest));
             }
+
+            progressBar.gameObject.SetActive(roverController.actionInProgress);
 
             float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
             batteryLifeText.text = batteryPercentage.ToString("P1");
@@ -437,6 +442,11 @@ public class UIController : MonoBehaviour
     void UpdateGameOverScreen()
     {
         gameOverScreen.SetActive(GameController.instance.GameOver());
+    }
+
+    public void UpdateProgressBar(float percent)
+    {
+        progressBar.fillAmount = percent;
     }
 
     void CheckGameState()

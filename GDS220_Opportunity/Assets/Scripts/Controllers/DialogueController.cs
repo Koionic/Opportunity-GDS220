@@ -37,10 +37,10 @@ public class DialogueController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            ChooseRandomText();
-        }
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    ChooseRandomText();
+        //}
     }
 
     void GrabTextFromFile(string dataPath, List<string> dialogueArray)

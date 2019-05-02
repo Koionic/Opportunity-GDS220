@@ -179,11 +179,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3646916969374355476, guid: 5961579a2509d4bec8c095382c0cf230,
-        type: 3}
-      propertyPath: compassRenderTexture
-      value: 
-      objectReference: {fileID: 145280379}
     - target: {fileID: 1698092132373310692, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -255,12 +250,12 @@ PrefabInstance:
     - target: {fileID: 3868874329081743989, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8247615783556086189, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4235962648341914475, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
@@ -275,15 +270,11 @@ PrefabInstance:
     - target: {fileID: 1220173131144849332, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000026369753
+      value: -0.000022888184
       objectReference: {fileID: 0}
     - target: {fileID: 1220173131144849332, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 750321975, guid: 5961579a2509d4bec8c095382c0cf230, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5055972763603390607, guid: 5961579a2509d4bec8c095382c0cf230,
@@ -401,15 +392,30 @@ PrefabInstance:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5397145749766669928, guid: 5961579a2509d4bec8c095382c0cf230,
+    - target: {fileID: 7487949136378080661, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 5397145749766669928, guid: 5961579a2509d4bec8c095382c0cf230,
+    - target: {fileID: 7487949136378080661, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7487949136378080661, guid: 5961579a2509d4bec8c095382c0cf230,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7487949136378080661, guid: 5961579a2509d4bec8c095382c0cf230,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7487949136378080661, guid: 5961579a2509d4bec8c095382c0cf230,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 950889890156583859, guid: 5961579a2509d4bec8c095382c0cf230,
         type: 3}
@@ -420,15 +426,18 @@ PrefabInstance:
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 205159841, guid: 5961579a2509d4bec8c095382c0cf230, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6939292528907021816, guid: 5961579a2509d4bec8c095382c0cf230,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5961579a2509d4bec8c095382c0cf230, type: 3}
---- !u!1 &145280379 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 750321975, guid: 5961579a2509d4bec8c095382c0cf230,
-    type: 3}
-  m_PrefabInstance: {fileID: 145280378}
-  m_PrefabAsset: {fileID: 0}
 --- !u!21 &1924085772
 Material:
   serializedVersion: 6

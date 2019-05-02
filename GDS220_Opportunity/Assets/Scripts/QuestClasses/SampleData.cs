@@ -7,4 +7,5 @@ public enum SampleType { Aluminium, Iron, Magnesium, Potassium };
 public class SampleData : QuestTarget
 {
     public SampleType sampleType;
+    public float sampleTime;
 }
