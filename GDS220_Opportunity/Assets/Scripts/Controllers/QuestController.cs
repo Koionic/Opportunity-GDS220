@@ -129,6 +129,14 @@ public class QuestController : MonoBehaviour
             {
                 UIController.instance.EnableCompassUI();
             }
+            if (completedQuest.GetType() == typeof(RepairQuest))
+            {
+                UIController.instance.EnableGroundControl();
+            }
+            if (completedQuest.GetType() == typeof(SampleQuest))
+            {
+                UIController.instance.EnableHomeWaypoint();
+            }
 
             UIController.instance.HideTutorialText();
             UIController.instance.ShowRoverLog(completedQuest.succeedQuestText);

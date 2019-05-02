@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Day01Quest01
   m_EditorClassIdentifier: 
   questData:
-    isActive: 1
-    isCompleted: 0
-    success: 0
+    isActive: 0
+    isCompleted: 1
+    success: 1
     gcBias: 0
     scBias: 0
   questLocation: {x: -20, y: 6500, z: 200}

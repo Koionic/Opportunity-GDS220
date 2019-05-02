@@ -343,6 +343,7 @@ public class RoverController : MonoBehaviour
                     {
                         repairData.repaired = true;
                         UIController.instance.ChangeTempText("Repair Successful");
+                        QuestController.instance.ActiveQuestOfType(typeof(RepairQuest)).CheckRepair(repairData);
                     }
                     break;
 

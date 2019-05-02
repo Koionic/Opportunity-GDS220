@@ -2,17 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RepairQuest : MonoBehaviour
+[CreateAssetMenu]
+public class RepairQuest : Quest
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void StartQuest()
     {
-        
+        base.StartQuest();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void QuestUpdate()
     {
-        
+        base.QuestUpdate();
+
+    }
+
+    public override void CheckRepair(RepairData repairData)
+    {
+        if (repairData.repaired)
+        {
+            EndQuest();
+        }
     }
 }

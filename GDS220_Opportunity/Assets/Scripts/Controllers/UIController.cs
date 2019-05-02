@@ -34,7 +34,7 @@ public class UIController : MonoBehaviour
     string finalText = "";
 
     [SerializeField]
-    RawImage cameraWaypoint, sampleWaypoint, repairWaypoint;
+    RawImage cameraWaypoint, sampleWaypoint, repairWaypoint, homeWaypoint;
 
     RawImage waypoint;
 
@@ -58,7 +58,7 @@ public class UIController : MonoBehaviour
     GameObject submitPhotoText;
 
     [SerializeField]
-    TextMeshProUGUI sampleText;
+    TextMeshProUGUI tempText;
     [SerializeField]
     float sampleTextDelay;
 
@@ -72,7 +72,9 @@ public class UIController : MonoBehaviour
     RawImage GCtrlSMdia;
 
     [SerializeField]
-    Texture2D socialMediaSelected, groundControlSelected;
+    Texture2D socialMediaSelected, groundControlSelected, groundControlNoSocialMedia;
+
+    bool groundControlOn, socialMediaOn;
 
     [SerializeField] 
     GameObject gameOverScreen;
@@ -195,6 +197,13 @@ public class UIController : MonoBehaviour
             {
                 compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f), 0f, 1, 1);
 
+                if (homeWaypoint.IsActive())
+                {
+                    float angle = Maths.GetSignedHorizontalAngle(roverController.fpsCamera.transform, Vector3.zero);
+
+                    homeWaypoint.uvRect = new Rect((angle / 360f), 0, 1, 1);
+                }
+
                 UpdateCompassHUD(typeof(CameraQuest));
                 UpdateCompassHUD(typeof(SampleQuest));
                 UpdateCompassHUD(typeof(RepairQuest));
@@ -271,20 +280,67 @@ public class UIController : MonoBehaviour
 
     public void ToggleStream()
     {
-        if (groundControlPanel.activeSelf)
+        if (groundControlOn)
         {
-            socialMediaPanel.SetActive(true);
-            groundControlPanel.SetActive(false);
+            if (groundControlPanel.activeSelf && socialMediaOn)
+            {
+                socialMediaPanel.SetActive(true);
+                groundControlPanel.SetActive(false);
 
-            GCtrlSMdia.texture = socialMediaSelected;
+                GCtrlSMdia.texture = socialMediaSelected;
+            }
+            else if (socialMediaPanel.activeSelf)
+            {
+                groundControlPanel.SetActive(true);
+                socialMediaPanel.SetActive(false);
+
+                GCtrlSMdia.texture = groundControlSelected;
+            }
         }
-        else if (socialMediaPanel.activeSelf)
+    }
+
+    public void EnableGroundControl()
+    {
+        if (groundControlOn)
         {
-            groundControlPanel.SetActive(true);
-            socialMediaPanel.SetActive(false);
-
-            GCtrlSMdia.texture = groundControlSelected;
+            if (!socialMediaOn)
+            {
+                EnableSocialMedia();
+            }
         }
+        else
+        {
+            groundControlOn = true;
+            GCtrlSMdia.gameObject.SetActive(true);
+        }
+    }
+
+    public void DisableGroundControl()
+    {
+        groundControlOn = false;
+        GCtrlSMdia.gameObject.SetActive(false);
+    }
+
+    public void EnableSocialMedia()
+    {
+        GCtrlSMdia.texture = groundControlSelected;
+        socialMediaOn = true;
+    }
+
+    public void DisableSocialMedia()
+    {
+        GCtrlSMdia.texture = groundControlNoSocialMedia;
+        socialMediaOn = false;
+    }
+
+    public void EnableHomeWaypoint()
+    {
+        homeWaypoint.gameObject.SetActive(true);
+    }
+
+    public void DisableHomeWaypoint()
+    {
+        homeWaypoint.gameObject.SetActive(false);
     }
 
     public void StartQuestUI(Quest quest)
@@ -425,18 +481,18 @@ public class UIController : MonoBehaviour
         tutorialText.text = "";
     }
 
-    public void ChangeTempText(string sampleName)
+    public void ChangeTempText(string tempString)
     {
-        CancelInvoke("RemoveSampleText");
+        CancelInvoke("RemoveTempText");
 
-        sampleText.text = sampleName;
+        tempText.text = tempString;
 
-        Invoke("RemoveSampleText", sampleTextDelay);
+        Invoke("RemoveTempText", sampleTextDelay);
     }
 
-    void RemoveSampleText()
+    void RemoveTempText()
     {
-        sampleText.text = "";
+        tempText.text = "";
     }
 
     void UpdateGameOverScreen()

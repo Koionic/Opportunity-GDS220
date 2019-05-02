@@ -87,6 +87,11 @@ public class Quest : ScriptableObject
 
     }
 
+    public virtual void CheckRepair(RepairData repairData)
+    {
+
+    }
+
     public void EndQuest()
     {
         QuestController.instance.CompleteQuest(this);
