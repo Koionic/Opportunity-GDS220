@@ -22,7 +22,7 @@ MonoBehaviour:
   questPrefab: {fileID: 3603542831645384706, guid: 522053abd0e6745a983240a1ad00c9c0,
     type: 3}
   spawnedObject: {fileID: 0}
-  questObjectSpawnDistance: 20
+  questObjectSpawnDistance: 50
   targetName: The Gold Cube
   startQuestText: yo oppy do this thing
   failQuestText: 
