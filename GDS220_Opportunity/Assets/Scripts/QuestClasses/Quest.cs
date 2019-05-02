@@ -24,39 +24,54 @@ public class Quest : ScriptableObject
 
     public string startQuestText, failQuestText, succeedQuestText;
 
+    public bool tutorialQuest;
+
+    protected float distanceFromQuest;
+
     public virtual void StartQuest()
     {
         questData.isActive = true;
 
-        if (startQuestText != null)
+        if (tutorialQuest)
         {
-            Debug.Log("queuing start text");
-            DialogueController.instance.QueueGCDialogue(startQuestText);
+            UIController.instance.ShowRoverLog(startQuestText);
+            UIController.instance.ShowTutorialText("Press Space to Enter Camera Mode");
+        }
+        else
+        {
+            if (startQuestText != null)
+            {
+                Debug.Log("queuing start text");
+                DialogueController.instance.QueueGCDialogue(startQuestText);
+            }
         }
     }
 
     public virtual void QuestUpdate()
     {
-        float distanceFromQuest = Maths.GetDistance(RoverController.instance.stats.currentPosition, questLocation);
+        distanceFromQuest = Maths.GetDistance(RoverController.instance.stats.currentPosition, questLocation);
 
-        if (distanceFromQuest <= questObjectSpawnDistance)
+        if (!tutorialQuest)
         {
-            if (spawnedObject != null)
+            if (distanceFromQuest <= questObjectSpawnDistance)
             {
-                spawnedObject.gameObject.SetActive(true);
+                if (spawnedObject != null)
+                {
+                    spawnedObject.gameObject.SetActive(true);
+                }
+                else
+                {
+                    spawnedObject = Instantiate(questPrefab, questLocation, Quaternion.identity, GameObject.FindWithTag("ObjectContainer").transform).GetComponent<QuestTarget>();
+                }
             }
             else
             {
-                spawnedObject = Instantiate(questPrefab, questLocation, Quaternion.identity, GameObject.FindWithTag("ObjectContainer").transform).GetComponent<QuestTarget>();
-            }
-        }
-        else
-        {
-            if (spawnedObject != null)
-            {
-                if (spawnedObject.gameObject.activeSelf)
+                if (spawnedObject != null)
                 {
-                    spawnedObject.gameObject.SetActive(false);
+                    if (spawnedObject.gameObject.activeSelf)
+                    {
+                        spawnedObject.gameObject.SetActive(false);
+                    }
                 }
             }
         }

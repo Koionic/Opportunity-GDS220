@@ -14,17 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questData:
     isActive: 0
-    isCompleted: 0
-    success: 0
+    isCompleted: 1
+    success: 1
     gcBias: 0
     scBias: 0
-  questLocation: {x: 0, y: 60, z: 0}
-  questPrefab: {fileID: 3603542831645384706, guid: 522053abd0e6745a983240a1ad00c9c0,
-    type: 3}
+  questLocation: {x: -20, y: 6500, z: 200}
+  questPrefab: {fileID: 0}
   spawnedObject: {fileID: 0}
   questObjectSpawnDistance: 300
-  targetName: The Sky
-  startQuestText: Cardinal Direction Misaligned, Capture Current Star Alignment For
-    Calibration
+  targetName: the Space Station
+  startQuestText: Cardinal Direction Misaligned, Locate Space Station in Orbit
   failQuestText: 
   succeedQuestText: Compass Calibrated And Online
+  tutorialQuest: 1

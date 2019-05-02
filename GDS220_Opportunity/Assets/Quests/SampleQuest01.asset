@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SampleQuest01
   m_EditorClassIdentifier: 
   questData:
-    isActive: 1
+    isActive: 0
     isCompleted: 0
     success: 0
     gcBias: 0
@@ -27,5 +27,6 @@ MonoBehaviour:
   startQuestText: yo oppy grab this thing
   failQuestText: 
   succeedQuestText: 
+  tutorialQuest: 0
   targetArea: {x: 0, y: 0, z: 50}
   targetThreshold: 20

@@ -125,7 +125,19 @@ public class QuestController : MonoBehaviour
     {
         UIController.instance.FinishQuestUI(completedQuest);
 
-        if (completedQuest.spawnedObject != null)
+        if (completedQuest.tutorialQuest)
+        {
+            if (completedQuest.GetType() == typeof(CameraQuest))
+            {
+                UIController.instance.EnableCompassUI();
+            }
+
+            UIController.instance.HideTutorialText();
+            UIController.instance.ShowRoverLog(completedQuest.succeedQuestText);
+
+            Invoke("HideRoverLog", 2f);
+        }
+        else if (completedQuest.spawnedObject != null)
         {
             GameController.instance.AddObjectToDeleteList(completedQuest.spawnedObject.gameObject);
         }
@@ -149,6 +161,11 @@ public class QuestController : MonoBehaviour
         }
 
         completedQuest = null;
+    }
+
+    void HideRoverLog()
+    {
+        UIController.instance.HideRoverLog();
     }
 
     public Quest ActiveQuestOfType(System.Type type)

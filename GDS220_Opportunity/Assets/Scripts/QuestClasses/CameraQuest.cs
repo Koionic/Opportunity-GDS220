@@ -27,7 +27,23 @@ public class CameraQuest : Quest
                 }
 
                 UIController.instance.DeleteNewPhoto();
-                EndQuest();
+
+                if (tutorialQuest)
+                {
+                    if (potentialPhotoCorrect)
+                    {
+                        EndQuest();
+                    }
+                    else
+                    {
+                        UIController.instance.ShowTutorialText("Space Station Not In View, Try Again");
+                    }
+                }
+                else
+                {
+                    EndQuest(); 
+                }
+
             }
             if (Input.GetKeyDown(KeyCode.N))
             {
@@ -40,6 +56,10 @@ public class CameraQuest : Quest
 
     public override void CheckPhoto(Texture2D newPhoto, bool correct)
     {
+        if (tutorialQuest)
+        {
+            UIController.instance.HideTutorialText();
+        }
         potentialPhoto = true;
         potentialPhotoCorrect = correct;
         UIController.instance.ShowNewPhoto(newPhoto);

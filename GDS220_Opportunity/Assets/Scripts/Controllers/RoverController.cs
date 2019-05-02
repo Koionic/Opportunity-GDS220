@@ -14,7 +14,7 @@ public class RoverController : MonoBehaviour
     float minimumX = -80f, maximumX = 80f;
 
     [SerializeField]
-    float minimumY = -60f, maximumY = 60f;
+    float minimumY = -60f, maximumY = 90f;
 
     float rotationX;
     float rotationY;
@@ -30,6 +30,9 @@ public class RoverController : MonoBehaviour
     public bool cameraMode;
 
     public UnityEvent OutOfBattery;
+
+    public bool compassActive = false;
+    public bool groundControlActive = false;
 
     public bool freezeMovement = true;
     public bool freezeInPlace = true;
@@ -87,8 +90,10 @@ public class RoverController : MonoBehaviour
         }
 
 
-
-        ProcessInputs();
+        if (!freezeMovement)
+        {
+            ProcessInputs();
+        }
 
     }
 
@@ -119,17 +124,15 @@ public class RoverController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            cameraMode = !cameraMode;
-
             if (cameraMode)
             {
-                //FreezeRoverStates(FreezeType.Movement, true);
+                ToggleCameraMode(false);
             }
             else
             {
-                fpsCamera.fieldOfView = 90f;
-                FreezeRoverStates(FreezeType.Movement, false);
+                ToggleCameraMode(true);
             }
+
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -155,7 +158,7 @@ public class RoverController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && groundControlActive)
         {
             UIController.instance.ToggleStream();
         }
@@ -199,6 +202,26 @@ public class RoverController : MonoBehaviour
 
         stats.currentPosition = transform.position;
 
+    }
+
+    public void ToggleCameraMode(bool on)
+    {
+        cameraMode = on;
+
+        Quest cameraQuest = QuestController.instance.ActiveQuestOfType(typeof(CameraQuest));
+
+        if (cameraMode)
+        {
+            if (cameraQuest != null && cameraQuest.tutorialQuest)
+            {
+                UIController.instance.ShowTutorialText("Press Left Mouse Button to Capture Photo");
+            }
+        }
+        else
+        {
+            fpsCamera.fieldOfView = 90f;
+            FreezeRoverStates(FreezeType.Movement, false);
+        }
     }
 
     public enum FreezeType { Battery, Movement, Physics, All};

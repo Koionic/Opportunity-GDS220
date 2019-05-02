@@ -57,16 +57,25 @@ public class PhotoCamera : MonoBehaviour
 
                 if (cameraQuest != null)
                 {
-                    if (cameraTarget != null)
+                    if (cameraQuest.tutorialQuest)
                     {
-                        CheckLineOfSight();
-                        targetInView = CheckVisionOfTarget(cameraTarget.position, roverCamera.fieldOfView - viewportMargin);
+                        targetInRange = true;
+                        targetObscured = false;
+                        targetInView = CheckVisionOfTarget(cameraQuest.questLocation, roverCamera.fieldOfView);
                     }
                     else
                     {
-                        if (cameraQuest.spawnedObject != null)
+                        if (cameraTarget != null)
                         {
-                            cameraTarget = cameraQuest.spawnedObject.transform;
+                            CheckLineOfSight();
+                            targetInView = CheckVisionOfTarget(cameraTarget.position, roverCamera.fieldOfView - viewportMargin);
+                        }
+                        else
+                        {
+                            if (cameraQuest.spawnedObject != null)
+                            {
+                                cameraTarget = cameraQuest.spawnedObject.transform;
+                            }
                         }
                     }
                 }
@@ -111,6 +120,11 @@ public class PhotoCamera : MonoBehaviour
         //checks if anything is in the players direction
         if (Physics.SphereCast(roverCamera.transform.position, losRadius, roverCamera.transform.forward, out raycast))
         {
+            if (raycast.collider.CompareTag("SpaceStation"))
+            {
+                targetObscured = false;
+                targetInRange = true;
+            }
             //sets the bool to true if the player is hit by the ray
             if (raycast.collider.CompareTag("CameraTarget"))
             {

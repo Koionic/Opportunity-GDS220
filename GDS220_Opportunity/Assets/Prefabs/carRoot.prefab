@@ -56,7 +56,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 7000
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -178,10 +178,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.667
-    damper: 266.66672
+    spring: 1666.6666
+    damper: 266.66666
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19619998
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -239,10 +239,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.667
-    damper: 266.66672
+    spring: 1666.6666
+    damper: 266.66666
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19619998
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -391,10 +391,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.6666
-    damper: 266.66666
+    spring: 1666.667
+    damper: 266.66672
     targetPosition: 0.5
-  m_SuspensionDistance: 0.1962
+  m_SuspensionDistance: 0.19619998
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -452,10 +452,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.6666
-    damper: 266.66666
+    spring: 1666.667
+    damper: 266.66672
     targetPosition: 0.5
-  m_SuspensionDistance: 0.1962
+  m_SuspensionDistance: 0.19619998
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -513,10 +513,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.667
-    damper: 266.66672
+    spring: 1666.6666
+    damper: 266.66666
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620001
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -558,13 +558,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7771348248396332397}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.57738173, y: -0, z: -0, w: 0.8164744}
   m_LocalPosition: {x: 0, y: 2, z: -1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5542096510414078492}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -70.533005, y: 0, z: 0}
 --- !u!20 &6349860763823787459
 Camera:
   m_ObjectHideFlags: 0
@@ -588,7 +588,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 7000
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -656,10 +656,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.667
-    damper: 266.66672
+    spring: 1666.6666
+    damper: 266.66666
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620001
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -789,7 +789,7 @@ MonoBehaviour:
   minimumX: -60
   maximumX: 60
   minimumY: -60
-  maximumY: 60
+  maximumY: 90
   fpsCamera: {fileID: 6349860763823787459}
   cameraMode: 0
   OutOfBattery:
@@ -797,6 +797,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  compassActive: 0
+  groundControlActive: 0
   freezeMovement: 0
   freezeInPlace: 0
   freezeBattery: 1

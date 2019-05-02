@@ -44,7 +44,7 @@ public class UIController : MonoBehaviour
     [SerializeField]
     RawImage compassUI;
     [SerializeField]
-    float compassSensitivity;
+    GameObject compassRenderTexture;
 
     [SerializeField] 
     GameObject cameraHUD;
@@ -54,6 +54,8 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI targetText;
     [SerializeField]
     RawImage newPhotoUI;
+    [SerializeField]
+    GameObject submitPhotoText;
 
     [SerializeField]
     TextMeshProUGUI sampleText;
@@ -71,6 +73,9 @@ public class UIController : MonoBehaviour
 
     [SerializeField] 
     GameObject gameOverScreen;
+
+    [SerializeField]
+    TextMeshProUGUI roverText, tutorialText;
 
     public static UIController instance = null;
 
@@ -137,7 +142,7 @@ public class UIController : MonoBehaviour
                 loadingPercentText.text = "100%";
                 loadingPercentText.color = Color.green;
 
-                loadingText.text = "Press Space To Start";
+                loadingText.text = "Press Enter To Start";
             }
             else
             {
@@ -183,11 +188,14 @@ public class UIController : MonoBehaviour
     {
         if (inGame)
         {
-            compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f), 0f, 1, 1);
+            if (compassRenderTexture.activeSelf)
+            {
+                compassUI.uvRect = new Rect((roverController.fpsCamera.transform.eulerAngles.y / 360f), 0f, 1, 1);
 
-            UpdateCompassHUD(typeof(CameraQuest));
-            UpdateCompassHUD(typeof(SampleQuest));
-            UpdateCompassHUD(typeof(RepairQuest));
+                UpdateCompassHUD(typeof(CameraQuest));
+                UpdateCompassHUD(typeof(SampleQuest));
+                UpdateCompassHUD(typeof(RepairQuest));
+            }
 
             float batteryPercentage = Mathf.InverseLerp(0, roverStats.maxBattery, roverStats.batteryLife);
             batteryLifeText.text = batteryPercentage.ToString("P1");
@@ -244,6 +252,16 @@ public class UIController : MonoBehaviour
             waypoint.gameObject.SetActive(false);
         }
 
+    }
+
+    public void EnableCompassUI()
+    {
+        compassRenderTexture.gameObject.SetActive(true);
+    }
+
+    public void DisableCompassUI()
+    {
+        compassRenderTexture.gameObject.SetActive(false);
     }
 
     public void ToggleStream()
@@ -368,12 +386,38 @@ public class UIController : MonoBehaviour
     {
         newPhotoUI.gameObject.SetActive(true);
         newPhotoUI.texture = newPhotoTexture;
+
+        submitPhotoText.SetActive(true);
     }
 
     public void DeleteNewPhoto()
     {
         newPhotoUI.texture = null;
         newPhotoUI.gameObject.SetActive(false);
+
+        submitPhotoText.SetActive(false);
+    }
+
+    public void ShowRoverLog(string roverString)
+    {
+        CancelInvoke("HideRoverLog");
+        roverText.text = roverString;
+    }
+
+    public void HideRoverLog()
+    {
+        roverText.text = "";
+    }
+
+    public void ShowTutorialText(string tutorialString)
+    {
+        CancelInvoke("HideTutorialText");
+        tutorialText.text = tutorialString;
+    }
+
+    public void HideTutorialText()
+    {
+        tutorialText.text = "";
     }
 
     public void ChangeSampleText(string sampleName)

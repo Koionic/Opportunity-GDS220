@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fd56dad684a45519d71983e5dfddb8, type: 3}
+  m_Name: Day01Quest02
+  m_EditorClassIdentifier: 
+  questData:
+    isActive: 0
+    isCompleted: 0
+    success: 0
+    gcBias: 0
+    scBias: 0
+  questLocation: {x: 0, y: 0, z: 0}
+  questPrefab: {fileID: 0}
+  spawnedObject: {fileID: 0}
+  questObjectSpawnDistance: 0
+  targetName: the Ground
+  startQuestText: Local Coordinates Unknown. Sample Mineral Composition To Locate
+    Base
+  failQuestText: 
+  succeedQuestText: Composition Analysed, Base Located
+  tutorialQuest: 1
+  targetArea: {x: 0, y: 0, z: 0}
+  targetThreshold: 200

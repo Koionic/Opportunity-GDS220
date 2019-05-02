@@ -33,9 +33,7 @@ public class SampleQuest : Quest
 
     void CheckPlayerLocation()
     {
-        Vector3 distanceFromTargetArea = targetArea - RoverController.instance.stats.currentPosition;
-
-        if (Mathf.Abs(distanceFromTargetArea.x) < targetThreshold && Mathf.Abs(distanceFromTargetArea.z) < targetThreshold)
+        if (distanceFromQuest < targetThreshold)
         {
             inTargetArea = true;
         }

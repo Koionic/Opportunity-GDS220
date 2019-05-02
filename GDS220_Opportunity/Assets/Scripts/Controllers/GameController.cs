@@ -157,7 +157,8 @@ public class GameController : MonoBehaviour
 
         roverController = RoverController.instance;
         roverController.gameObject.transform.position = spawnPoint;
-        roverController.cameraMode = false;
+
+        roverController.ToggleCameraMode(false);
 
         roverController.FreezeRoverStates(RoverController.FreezeType.All, true);
 

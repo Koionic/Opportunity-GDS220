@@ -76,7 +76,7 @@ public class LoadingController : MonoBehaviour
 
                 if (levelIsReady)
                 {
-                    if (Input.GetKeyDown(KeyCode.Space))
+                    if (Input.GetKeyDown(KeyCode.Return))
                     {
                         LeaveLoadingScreen();
                     }
