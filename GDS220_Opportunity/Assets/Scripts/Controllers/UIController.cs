@@ -84,7 +84,7 @@ public class UIController : MonoBehaviour
 
     RoverController roverController;
 
-    PhotoCamera roverCamera;
+    PhotoCamera roverPhotoCamera;
 
     RoverStats roverStats;
 
@@ -119,7 +119,7 @@ public class UIController : MonoBehaviour
             else if (RoverController.instance != null)
             {
                 roverController = RoverController.instance;
-                roverCamera = roverController.gameObject.GetComponentInChildren<PhotoCamera>();
+                roverPhotoCamera = roverController.gameObject.GetComponentInChildren<PhotoCamera>();
             }
         }
 
@@ -350,27 +350,27 @@ public class UIController : MonoBehaviour
     {
         if (inGame)
         {
-            zoomSlider.value = roverCamera.zoomPercent;
+            zoomSlider.value = roverPhotoCamera.zoomPercent;
 
             string targetStatus = "";
 
             if (QuestController.instance.ActiveQuestOfType(typeof(CameraQuest)) != null)
             {
-                if (roverCamera.targetInView && roverCamera.targetInRange && !roverCamera.targetObscured)
+                if (roverPhotoCamera.targetInView && roverPhotoCamera.targetInRange && !roverPhotoCamera.targetObscured)
                 {
                     targetStatus = "Target in View";
                 }
                 else
                 {
-                    if (!roverCamera.targetInView)
+                    if (!roverPhotoCamera.targetInView)
                     {
                         targetStatus = "Target not in view";
                     }
-                    else if (!roverCamera.targetInRange)
+                    else if (!roverPhotoCamera.targetInRange)
                     {
                         targetStatus = "Target too far away";
                     }
-                    else if (roverCamera.targetObscured)
+                    else if (roverPhotoCamera.targetObscured)
                     {
                         targetStatus = "Target is obscured";
                     }
@@ -425,7 +425,7 @@ public class UIController : MonoBehaviour
         tutorialText.text = "";
     }
 
-    public void ChangeSampleText(string sampleName)
+    public void ChangeTempText(string sampleName)
     {
         CancelInvoke("RemoveSampleText");
 

@@ -805,6 +805,7 @@ MonoBehaviour:
   batteryDepleteRate: 0.5
   sampleOrigin: {fileID: 1518624062}
   sampleDistance: 2
+  buttonCooldown: 0.1
   stats:
     newSave: 0
     saveFileIndex: 0

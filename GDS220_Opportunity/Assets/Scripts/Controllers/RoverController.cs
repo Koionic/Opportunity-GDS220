@@ -29,6 +29,9 @@ public class RoverController : MonoBehaviour
 
     public bool cameraMode;
 
+    bool potentialPhoto;
+    bool potentialPhotoCorrect;
+
     public UnityEvent OutOfBattery;
 
     public bool compassActive = false;
@@ -49,6 +52,7 @@ public class RoverController : MonoBehaviour
     float sampleDistance;
 
     SampleData sampleData;
+    RepairData repairData;
 
     public RoverStats stats;
 
@@ -81,7 +85,7 @@ public class RoverController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (freezeInPlace)
         {
@@ -140,11 +144,11 @@ public class RoverController : MonoBehaviour
             {
                 ToggleCameraMode(true);
             }
-
         }
 
         if (Input.GetMouseButtonDown(0))
         {
+
             if (cameraMode)
             {
                 photoCamera.TriggerPhoto(Screen.width, Screen.height);
@@ -159,8 +163,33 @@ public class RoverController : MonoBehaviour
                     sampleData = raycastHit.collider.GetComponent<SampleData>();
                     if (sampleData != null)
                     {
-                        print("start");
                         StartAction(RoverAction.Sample);
+                    }
+
+                }
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (!cameraMode)
+            {
+                Ray repairRay = new Ray(sampleOrigin.transform.position, sampleOrigin.transform.forward);
+                RaycastHit raycastHit;
+
+                if (Physics.Raycast(repairRay, out raycastHit, sampleDistance))
+                {
+                    repairData = raycastHit.collider.GetComponent<RepairData>();
+                    if (repairData != null)
+                    {
+                        if (repairData.repaired)
+                        {
+                            UIController.instance.ChangeTempText("Already Repaired");
+                        }
+                        else
+                        {
+                            StartAction(RoverAction.Repair);
+                        }
                     }
 
                 }
@@ -170,6 +199,37 @@ public class RoverController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab) && groundControlActive)
         {
             UIController.instance.ToggleStream();
+        }
+
+        if (potentialPhoto)
+        {
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                Quest cameraQuest = QuestController.instance.ActiveQuestOfType(typeof(CameraQuest));
+                cameraQuest.questData.success = potentialPhotoCorrect;
+
+                if (cameraQuest.tutorialQuest)
+                {
+                    if (potentialPhotoCorrect)
+                    {
+                        cameraQuest.EndQuest();
+                    }
+                    else
+                    {
+                        UIController.instance.ShowTutorialText("Space Station Not In View, Try Again");
+                    }
+
+                    HidePhoto();
+                }
+                else
+                {
+                    cameraQuest.EndQuest();
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                HidePhoto();
+            }
         }
 
         Vector2 movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -220,11 +280,23 @@ public class RoverController : MonoBehaviour
         switch (roverAction)
         {
             case (RoverAction.Repair):
-                while (Input.GetMouseButton(0))
+                while (true)
                 {
-                    //UIController.instance.UpdateProgressBar(0f);
+                    actionProgress += Time.deltaTime;
+                    float percent = Mathf.InverseLerp(0f, repairData.repairTime, actionProgress);
+
+                    if (UIController.instance != null)
+                    {
+                        UIController.instance.UpdateProgressBar(percent);
+                    }
+
+                    if (Input.GetMouseButtonUp(1) || percent >= .99f)
+                    {
+                        FinishAction(roverAction, percent >= .99f);
+                        yield break;
+                    }
+                    yield return null;
                 }
-                break;
 
             case (RoverAction.Sample):
                 while (true)
@@ -236,7 +308,6 @@ public class RoverController : MonoBehaviour
                     {
                         UIController.instance.UpdateProgressBar(percent);
                     }
-                    print("running");
 
                     if (Input.GetMouseButtonUp(0) || percent >= .99f)
                     {
@@ -270,12 +341,14 @@ public class RoverController : MonoBehaviour
             {
                 case (RoverAction.Repair):
                     {
-
+                        repairData.repaired = true;
+                        UIController.instance.ChangeTempText("Repair Successful");
                     }
                     break;
 
                 case (RoverAction.Sample):
                     {
+                        UIController.instance.ChangeTempText("Sample Results: " + sampleData.sampleType.ToString());
                         QuestController.instance.SendSample(sampleData);
                     }
                     break;
@@ -301,6 +374,22 @@ public class RoverController : MonoBehaviour
             fpsCamera.fieldOfView = 90f;
             FreezeRoverStates(FreezeType.Movement, false);
         }
+    }
+
+    public void ShowPhoto(Texture2D photo, bool correct)
+    {
+        potentialPhoto = true;
+        potentialPhotoCorrect = correct;
+
+        UIController.instance.ShowNewPhoto(photo);
+    }
+
+    public void HidePhoto()
+    {
+        potentialPhoto = false;
+        potentialPhotoCorrect = false;
+
+        UIController.instance.DeleteNewPhoto();
     }
 
     public enum FreezeType { Battery, Movement, Physics, All};

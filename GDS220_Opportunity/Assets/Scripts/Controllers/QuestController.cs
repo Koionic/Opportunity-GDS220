@@ -91,8 +91,6 @@ public class QuestController : MonoBehaviour
 
     public void SendSample(SampleData sample)
     {
-        UIController.instance.ChangeSampleText(sample.sampleType.ToString());
-
         Quest sampleQuest = ActiveQuestOfType(typeof(SampleQuest));
 
         if (sampleQuest != null)

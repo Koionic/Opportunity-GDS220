@@ -68,7 +68,7 @@ public class PhotoCamera : MonoBehaviour
                         if (cameraTarget != null)
                         {
                             CheckLineOfSight();
-                            targetInView = CheckVisionOfTarget(cameraTarget.position, roverCamera.fieldOfView - viewportMargin);
+                            targetInView = CheckVisionOfTarget(cameraTarget.position, roverCamera.fieldOfView);
                         }
                         else
                         {
@@ -100,7 +100,6 @@ public class PhotoCamera : MonoBehaviour
         angle = Maths.GetAngle(roverCamera.transform, target);
 
         float viewportModifier = viewportMargin * (1f - zoomPercent);
-        print(viewportModifier);
 
         if (angle < searchAngle - viewportModifier)
         {
@@ -189,7 +188,9 @@ public class PhotoCamera : MonoBehaviour
 
                 photo.Apply();
 
-                QuestController.instance.SendPhoto(photo, correct);
+                RoverController.instance.ShowPhoto(photo, correct);
+
+                //QuestController.instance.SendPhoto(photo, correct);
             }
         }
 
