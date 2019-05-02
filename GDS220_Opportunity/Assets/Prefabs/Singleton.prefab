@@ -444,7 +444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &750321976
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1570,7 +1570,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5737151145056957371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1611,7 +1611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.7607843}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1817,10 +1817,10 @@ RectTransform:
   m_Father: {fileID: 1220173131144849332}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 181.14996, y: -146.83}
+  m_SizeDelta: {x: 362.29993, y: 41.26}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6926243809140771323
 CanvasRenderer:
@@ -1927,11 +1927,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -2669,7 +2669,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6387762967758171823
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3184,8 +3184,8 @@ MonoBehaviour:
       savedLevel: 0
       batteryLife: 100
       maxBattery: 100
-      lastSavedPosition: {x: 0, y: 16, z: 0}
-      currentPosition: {x: 0, y: 16, z: 0}
+      lastSavedPosition: {x: -55, y: 49, z: -12}
+      currentPosition: {x: -55, y: 49, z: -12}
   - levelName: 
     levelTexture: {fileID: 0}
     levelMap: {fileID: 0}
@@ -3300,7 +3300,7 @@ MonoBehaviour:
   cameraWaypoint: {fileID: 5663567582982665617}
   sampleWaypoint: {fileID: 59946625693067731}
   repairWaypoint: {fileID: 2059133688597174336}
-  homeWaypoint: {fileID: 0}
+  homeWaypoint: {fileID: 3007962754606662935}
   compassUI: {fileID: 6640673307298446249}
   compassRenderTexture: {fileID: 750321975}
   cameraHUD: {fileID: 6939292528907021816}
@@ -3308,7 +3308,7 @@ MonoBehaviour:
   targetText: {fileID: 8495921526696504854}
   newPhotoUI: {fileID: 1616785539}
   submitPhotoText: {fileID: 3509719572517441209}
-  tempText: {fileID: 0}
+  tempText: {fileID: 8692037305072294586}
   sampleTextDelay: 3
   progressBar: {fileID: 205159843}
   socialMediaPanel: {fileID: 1734440224}
@@ -3317,7 +3317,8 @@ MonoBehaviour:
   socialMediaSelected: {fileID: 2800000, guid: a5d2e31ea6114435690630bbf03af823, type: 3}
   groundControlSelected: {fileID: 2800000, guid: eac36f52a57db45a99e60551fd04fb46,
     type: 3}
-  groundControlNoSocialMedia: {fileID: 0}
+  groundControlNoSocialMedia: {fileID: 2800000, guid: b16bc37cd490746f48e793e4f3b75cc1,
+    type: 3}
   gameOverScreen: {fileID: 8865812185459759694}
   roverText: {fileID: 950889890156583859}
   tutorialText: {fileID: 7487949136378080661}
@@ -3360,6 +3361,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainQuests:
   - {fileID: 11400000, guid: bb3525de25b6f459899e2e1083b7681a, type: 2}
+  - {fileID: 11400000, guid: 5a347ab15279745da928e6d69962d8ab, type: 2}
+  - {fileID: 11400000, guid: 8c46b37a412624803ae0ac50e06abe45, type: 2}
   mainQuest: {fileID: 0}
   socialQuest1: {fileID: 0}
   socialQuest2: {fileID: 0}
@@ -4331,8 +4334,8 @@ RectTransform:
   m_Father: {fileID: 7950642724205119185}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.000000059604645}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4413,8 +4416,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000076293945, y: 0.000022888184}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000076293945, y: -0.000030517578}
+  m_SizeDelta: {x: 0, y: -24.922028}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3351490395485762528
 CanvasRenderer:
@@ -4868,7 +4871,7 @@ GameObject:
   - component: {fileID: 7467234632256150906}
   - component: {fileID: 8692037305072294586}
   m_Layer: 5
-  m_Name: SampleText
+  m_Name: TempText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6751,10 +6754,10 @@ RectTransform:
   m_Father: {fileID: 1220173131144849332}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 181.14996, y: -63.1}
+  m_SizeDelta: {x: 362.29993, y: 126.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1782564656244457564
 CanvasRenderer:
@@ -6865,11 +6868,11 @@ MonoBehaviour:
     lineCount: 3
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -7110,7 +7113,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5012382914189623634}
   m_HandleRect: {fileID: 2104642374644498607}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 1
   m_OnValueChanged:

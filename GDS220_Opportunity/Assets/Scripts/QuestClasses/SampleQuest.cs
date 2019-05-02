@@ -6,9 +6,6 @@ using UnityEngine;
 public class SampleQuest : Quest
 {
     [SerializeField]
-    Vector3 targetArea;
-
-    [SerializeField]
     float targetThreshold;
 
     bool inTargetArea;

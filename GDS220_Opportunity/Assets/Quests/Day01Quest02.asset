@@ -18,7 +18,7 @@ MonoBehaviour:
     success: 0
     gcBias: 0
     scBias: 0
-  questLocation: {x: 0, y: 0, z: 0}
+  questLocation: {x: -55.2, y: 48.12, z: -2.11}
   questPrefab: {fileID: 0}
   spawnedObject: {fileID: 0}
   questObjectSpawnDistance: 0
@@ -28,5 +28,4 @@ MonoBehaviour:
   failQuestText: 
   succeedQuestText: Composition Analysed, Base Located
   tutorialQuest: 1
-  targetArea: {x: 0, y: 0, z: 0}
   targetThreshold: 200

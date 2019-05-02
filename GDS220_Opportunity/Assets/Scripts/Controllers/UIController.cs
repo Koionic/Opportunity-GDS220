@@ -84,6 +84,8 @@ public class UIController : MonoBehaviour
 
     public static UIController instance = null;
 
+    GameObject homeBase;
+
     RoverController roverController;
 
     PhotoCamera roverPhotoCamera;
@@ -122,6 +124,11 @@ public class UIController : MonoBehaviour
             {
                 roverController = RoverController.instance;
                 roverPhotoCamera = roverController.gameObject.GetComponentInChildren<PhotoCamera>();
+            }
+
+            if (homeBase == null)
+            {
+                homeBase = GameObject.FindWithTag("HomeBase");
             }
         }
 
@@ -199,7 +206,7 @@ public class UIController : MonoBehaviour
 
                 if (homeWaypoint.IsActive())
                 {
-                    float angle = Maths.GetSignedHorizontalAngle(roverController.fpsCamera.transform, Vector3.zero);
+                    float angle = Maths.GetSignedHorizontalAngle(roverController.fpsCamera.transform, homeBase.transform.position);
 
                     homeWaypoint.uvRect = new Rect((angle / 360f), 0, 1, 1);
                 }

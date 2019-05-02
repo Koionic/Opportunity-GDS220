@@ -400,13 +400,13 @@ public class RoverController : MonoBehaviour
         sampleData = other.GetComponent<SampleData>();
         if (sampleData != null && !sampleData.sampled)
         {
-            UIController.instance.ChangeTempText("Hold Left Mouse Button To Sample" + sampleData.name);
+            UIController.instance.ChangeTempText("Hold Left Mouse Button To Sample " + sampleData.name);
         }
 
         repairData = other.GetComponent<RepairData>();
         if (repairData != null && !repairData.repaired)
         {
-            UIController.instance.ChangeTempText("Hold Right Mouse Button To Repair" + repairData.name);
+            UIController.instance.ChangeTempText("Hold Right Mouse Button To Repair " + repairData.name);
         }
     }
 

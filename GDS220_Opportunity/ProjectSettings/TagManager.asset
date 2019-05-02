@@ -8,6 +8,7 @@ TagManager:
   - SampleTarget
   - ObjectContainer
   - SpaceStation
+  - HomeBase
   layers:
   - Default
   - TransparentFX

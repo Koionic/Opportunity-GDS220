@@ -28,7 +28,7 @@ GameObject:
   - component: {fileID: 1761942128715145050}
   m_Layer: 0
   m_Name: HomeBase
-  m_TagString: Untagged
+  m_TagString: HomeBase
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,18 +147,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 812949c4a00c9164c9433b6ec0bc3aea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 812949c4a00c9164c9433b6ec0bc3aea, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 812949c4a00c9164c9433b6ec0bc3aea, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 812949c4a00c9164c9433b6ec0bc3aea, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3300000, guid: 812949c4a00c9164c9433b6ec0bc3aea, type: 3}
       propertyPath: m_Mesh
