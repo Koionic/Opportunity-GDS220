@@ -106,7 +106,6 @@ public class RoverController : MonoBehaviour
         {
             ProcessInputs();
         }
-
     }
 
 
@@ -148,50 +147,50 @@ public class RoverController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-
             if (cameraMode)
             {
-                photoCamera.TriggerPhoto(Screen.width, Screen.height);
+                if (QuestController.instance.ActiveQuestOfType(typeof(CameraQuest)))
+                {
+                    photoCamera.TriggerPhoto(Screen.width, Screen.height);
+                }
+                else if (sampleData != null)
+                {
+                    ToggleCameraMode(false);
+                    StartAction(RoverAction.Sample);
+                }
+
             }
             else
             {
-                Ray sampleRay = new Ray(sampleOrigin.transform.position, sampleOrigin.transform.forward);
-                RaycastHit raycastHit;
-
-                if (Physics.Raycast(sampleRay, out raycastHit, sampleDistance))
+                if (sampleData != null)
                 {
-                    sampleData = raycastHit.collider.GetComponent<SampleData>();
-                    if (sampleData != null)
-                    {
-                        StartAction(RoverAction.Sample);
-                    }
-
+                    StartAction(RoverAction.Sample);
                 }
             }
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (!cameraMode)
+            if (cameraMode)
             {
-                Ray repairRay = new Ray(sampleOrigin.transform.position, sampleOrigin.transform.forward);
-                RaycastHit raycastHit;
-
-                if (Physics.Raycast(repairRay, out raycastHit, sampleDistance))
+                if (repairData != null && !repairData.repaired)
                 {
-                    repairData = raycastHit.collider.GetComponent<RepairData>();
-                    if (repairData != null)
+                    ToggleCameraMode(false);
+                    StartAction(RoverAction.Repair);
+                }
+            }
+            else
+            {
+                if (repairData != null)
+                {
+                    if (repairData.repaired)
                     {
-                        if (repairData.repaired)
-                        {
-                            UIController.instance.ChangeTempText("Already Repaired");
-                        }
-                        else
-                        {
-                            StartAction(RoverAction.Repair);
-                        }
+                        UIController.instance.ChangeTempText("Already Repaired");
                     }
-
+                    else
+                    {
+                        StartAction(RoverAction.Repair);
+                    }
                 }
             }
         }
@@ -288,6 +287,7 @@ public class RoverController : MonoBehaviour
                     if (UIController.instance != null)
                     {
                         UIController.instance.UpdateProgressBar(percent);
+                        UIController.instance.ChangeTempText("Reparing...");
                     }
 
                     if (Input.GetMouseButtonUp(1) || percent >= .99f)
@@ -307,6 +307,7 @@ public class RoverController : MonoBehaviour
                     if (UIController.instance != null)
                     {
                         UIController.instance.UpdateProgressBar(percent);
+                        UIController.instance.ChangeTempText("Sampling...");
                     }
 
                     if (Input.GetMouseButtonUp(0) || percent >= .99f)
@@ -341,7 +342,7 @@ public class RoverController : MonoBehaviour
             {
                 case (RoverAction.Repair):
                     {
-                        repairData.repaired = true;
+                        repairData.Repair();
                         UIController.instance.ChangeTempText("Repair Successful");
                         QuestController.instance.ActiveQuestOfType(typeof(RepairQuest)).CheckRepair(repairData);
                     }
@@ -349,6 +350,7 @@ public class RoverController : MonoBehaviour
 
                 case (RoverAction.Sample):
                     {
+                        sampleData.sampled = true;
                         UIController.instance.ChangeTempText("Sample Results: " + sampleData.sampleType.ToString());
                         QuestController.instance.SendSample(sampleData);
                     }
@@ -391,6 +393,33 @@ public class RoverController : MonoBehaviour
         potentialPhotoCorrect = false;
 
         UIController.instance.DeleteNewPhoto();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        sampleData = other.GetComponent<SampleData>();
+        if (sampleData != null && !sampleData.sampled)
+        {
+            UIController.instance.ChangeTempText("Hold Left Mouse Button To Sample" + sampleData.name);
+        }
+
+        repairData = other.GetComponent<RepairData>();
+        if (repairData != null && !repairData.repaired)
+        {
+            UIController.instance.ChangeTempText("Hold Right Mouse Button To Repair" + repairData.name);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponent<SampleData>())
+        {
+            sampleData = null;
+        }
+        if (other.GetComponent<RepairData>())
+        {
+            repairData = null;
+        }
     }
 
     public enum FreezeType { Battery, Movement, Physics, All};

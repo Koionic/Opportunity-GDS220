@@ -20,6 +20,7 @@ public class RepairQuest : Quest
     {
         if (repairData.repaired)
         {
+            questData.success = true;
             EndQuest();
         }
     }

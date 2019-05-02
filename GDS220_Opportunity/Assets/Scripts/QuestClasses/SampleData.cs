@@ -8,4 +8,5 @@ public class SampleData : QuestTarget
 {
     public SampleType sampleType;
     public float sampleTime;
+    public bool sampled;
 }

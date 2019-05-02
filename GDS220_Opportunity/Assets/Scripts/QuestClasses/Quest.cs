@@ -35,7 +35,6 @@ public class Quest : ScriptableObject
         if (tutorialQuest)
         {
             UIController.instance.ShowRoverLog(startQuestText);
-            UIController.instance.ShowTutorialText("Press Space to Enter Camera Mode");
         }
         else
         {

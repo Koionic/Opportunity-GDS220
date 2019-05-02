@@ -10,6 +10,11 @@ public class CameraQuest : Quest
     public override void StartQuest()
     {
         base.StartQuest();
+
+        if (tutorialQuest)
+        {
+            UIController.instance.ShowTutorialText("Press Space to Enter Camera Mode");
+        }
     }
 
     // Update is called once per frame

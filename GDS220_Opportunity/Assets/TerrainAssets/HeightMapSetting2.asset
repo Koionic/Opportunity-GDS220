@@ -20,7 +20,7 @@ MonoBehaviour:
     persistance: 0.29
     lacunarity: 2.5
     seed: 0
-    offset: {x: 140, y: 35}
+    offset: {x: 0, y: 0}
   useFalloff: 0
   heightMultiplier: 52.2
   heightCurve:

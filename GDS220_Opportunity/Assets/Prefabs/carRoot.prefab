@@ -178,10 +178,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.667
-    damper: 266.66672
+    spring: 1666.6666
+    damper: 266.66666
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19619998
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -239,10 +239,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.667
-    damper: 266.66672
+    spring: 1666.6666
+    damper: 266.66666
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19619998
+  m_SuspensionDistance: 0.1962
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -391,10 +391,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.6666
-    damper: 266.66666
+    spring: 1666.667
+    damper: 266.66672
     targetPosition: 0.5
-  m_SuspensionDistance: 0.1962
+  m_SuspensionDistance: 0.19619998
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -452,10 +452,10 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.5
   m_SuspensionSpring:
-    spring: 1666.6666
-    damper: 266.66666
+    spring: 1666.667
+    damper: 266.66672
     targetPosition: 0.5
-  m_SuspensionDistance: 0.1962
+  m_SuspensionDistance: 0.19620001
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -516,7 +516,7 @@ WheelCollider:
     spring: 1666.667
     damper: 266.66672
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620001
+  m_SuspensionDistance: 0.19619998
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -659,7 +659,7 @@ WheelCollider:
     spring: 1666.667
     damper: 266.66672
     targetPosition: 0.5
-  m_SuspensionDistance: 0.19620001
+  m_SuspensionDistance: 0.19619998
   m_ForceAppPointDistance: 0.97
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -689,6 +689,7 @@ GameObject:
   - component: {fileID: 7614670819291936975}
   - component: {fileID: 2270984220277766762}
   - component: {fileID: 2131110676682106897}
+  - component: {fileID: 881136031}
   m_Layer: 0
   m_Name: carRoot
   m_TagString: Untagged
@@ -805,13 +806,26 @@ MonoBehaviour:
   batteryDepleteRate: 0.5
   sampleOrigin: {fileID: 1518624062}
   sampleDistance: 2
-  buttonCooldown: 0.1
   stats:
     newSave: 0
     saveFileIndex: 0
     savedLevel: 0
     batteryLife: 100
     maxBattery: 100
-    lastSavedPosition: {x: 0, y: 0, z: 0}
-    currentPosition: {x: 0, y: 0, z: 0}
+    lastSavedPosition: {x: -55, y: 49, z: -12}
+    currentPosition: {x: -55, y: 49, z: -12}
   actionInProgress: 0
+--- !u!136 &881136031
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9220938276395561724}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.7042396
+  m_Height: 4.4508457
+  m_Direction: 2
+  m_Center: {x: 0.00000036360217, y: 0, z: 2.0755472}

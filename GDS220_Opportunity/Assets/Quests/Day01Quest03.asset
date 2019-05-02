@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questData:
     isActive: 0
-    isCompleted: 1
+    isCompleted: 0
     success: 0
     gcBias: 0
     scBias: 0
-  questLocation: {x: 10, y: 0, z: 10}
+  questLocation: {x: 523, y: 51, z: 225}
   questPrefab: {fileID: 0}
   spawnedObject: {fileID: 0}
   questObjectSpawnDistance: 0
-  targetName: Home Base
+  targetName: The Satellite Link
   startQuestText: Re-establish connection to ground control
   failQuestText: 
   succeedQuestText: Satelite successfully linked
