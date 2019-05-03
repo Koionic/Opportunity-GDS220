@@ -16,13 +16,13 @@ MonoBehaviour:
   layers:
   - texture: {fileID: 2800000, guid: 4484adb582308dc4daa00403cb82dff7, type: 3}
     tint: {r: 1, g: 0.21051216, b: 0, a: 1}
-    tintStrength: 0.761
+    tintStrength: 0.522
     startHeight: 0
-    blendStrength: 0.218
+    blendStrength: 0.335
     textureScale: 8.48
   - texture: {fileID: 2800000, guid: 4bf6bf1b073945747b14ef0f91ba63e4, type: 3}
     tint: {r: 1, g: 0.43325153, b: 0.15566039, a: 1}
-    tintStrength: 0.631
-    startHeight: 0.819
+    tintStrength: 0.826
+    startHeight: 0.663
     blendStrength: 1
     textureScale: 8.25

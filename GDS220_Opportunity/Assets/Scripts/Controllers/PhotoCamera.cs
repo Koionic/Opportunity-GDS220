@@ -160,7 +160,6 @@ public class PhotoCamera : MonoBehaviour
     public void TriggerPhoto(int width, int height)
     {
         photoCamera.fieldOfView = roverCamera.fieldOfView;
-        photoCamera.transform.rotation = roverCamera.transform.rotation;
 
         photoCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         takePhotoNextFrame = true;

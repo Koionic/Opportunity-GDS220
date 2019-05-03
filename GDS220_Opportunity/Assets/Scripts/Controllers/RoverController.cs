@@ -23,6 +23,9 @@ public class RoverController : MonoBehaviour
 
     PhotoCamera photoCamera;
 
+    [SerializeField]
+    GameObject neckUpNDown, neckLeftNRight;
+
     Rigidbody rb;
 
     public UnityEvent<Texture2D, bool> photoTaken;
@@ -104,18 +107,19 @@ public class RoverController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!freezeBattery)
+        {
+            DepleteBattery();
+        }
+
         rotationX += Input.GetAxis("Mouse X") * sensitivityX;
         rotationX = Mathf.Clamp(rotationX, minimumX, maximumX);
 
         rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
         rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
 
-        fpsCamera.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0f);
-
-        if (!freezeBattery)
-        {
-            DepleteBattery();
-        }
+        neckLeftNRight.transform.localEulerAngles = new Vector3(0f, rotationX, 0f);
+        neckUpNDown.transform.localEulerAngles = new Vector3(0f, 0f, -rotationY);
     }
 
 
