@@ -96,15 +96,25 @@ public class RoverController : MonoBehaviour
             rb.constraints = RigidbodyConstraints.None;
         }
 
-        if (!freezeBattery)
-        {
-            DepleteBattery();
-        }
-
-
         if (!freezeMovement)
         {
             ProcessInputs();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        rotationX += Input.GetAxis("Mouse X") * sensitivityX;
+        rotationX = Mathf.Clamp(rotationX, minimumX, maximumX);
+
+        rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
+        rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+
+        fpsCamera.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0f);
+
+        if (!freezeBattery)
+        {
+            DepleteBattery();
         }
     }
 
@@ -155,8 +165,15 @@ public class RoverController : MonoBehaviour
                 }
                 else if (sampleData != null)
                 {
-                    ToggleCameraMode(false);
-                    StartAction(RoverAction.Sample);
+                    if (sampleData.sampled)
+                    {
+                        UIController.instance.ChangeTempText("already sampled");
+                    }
+                    else
+                    {
+                        ToggleCameraMode(false);
+                        StartAction(RoverAction.Sample);
+                    }
                 }
 
             }
@@ -164,7 +181,14 @@ public class RoverController : MonoBehaviour
             {
                 if (sampleData != null)
                 {
-                    StartAction(RoverAction.Sample);
+                    if (sampleData.sampled)
+                    {
+                        UIController.instance.ChangeTempText("already sampled");
+                    }
+                    else
+                    {
+                        StartAction(RoverAction.Sample);
+                    }
                 }
             }
         }
@@ -173,10 +197,17 @@ public class RoverController : MonoBehaviour
         {
             if (cameraMode)
             {
-                if (repairData != null && !repairData.repaired)
+                if (repairData != null)
                 {
-                    ToggleCameraMode(false);
-                    StartAction(RoverAction.Repair);
+                    if (repairData.repaired)
+                    {
+                        UIController.instance.ChangeTempText("Already Repaired");
+                    }
+                    else
+                    {
+                        ToggleCameraMode(false);
+                        StartAction(RoverAction.Repair);
+                    }
                 }
             }
             else
@@ -233,11 +264,7 @@ public class RoverController : MonoBehaviour
 
         Vector2 movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        rotationX += Input.GetAxis("Mouse X") * sensitivityX;
-        rotationX = Mathf.Clamp(rotationX, minimumX, maximumX);
-
-        rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
-        rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+        
 
         if (outOfBattery || freezeMovement)
         {
@@ -262,8 +289,6 @@ public class RoverController : MonoBehaviour
         }
 
         wheelDrive.SetMoveInput(movementInput);
-
-        fpsCamera.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0f);
 
         stats.currentPosition = transform.position;
 
@@ -349,25 +374,32 @@ public class RoverController : MonoBehaviour
     {
         actionInProgress = false;
 
-        if (complete && QuestController.instance != null)
+        if (QuestController.instance != null)
         {
-            switch (roverAction)
+            if (complete)
             {
-                case (RoverAction.Repair):
-                    {
-                        repairData.Repair();
-                        UIController.instance.ChangeTempText("Repair Successful");
-                        QuestController.instance.ActiveQuestOfType(typeof(RepairQuest)).CheckRepair(repairData);
-                    }
-                    break;
+                switch (roverAction)
+                {
+                    case (RoverAction.Repair):
+                        {
+                            repairData.Repair();
+                            UIController.instance.ChangeTempText("Repair Successful");
+                            QuestController.instance.ActiveQuestOfType(typeof(RepairQuest)).CheckRepair(repairData);
+                        }
+                        break;
 
-                case (RoverAction.Sample):
-                    {
-                        sampleData.sampled = true;
-                        UIController.instance.ChangeTempText("Sample Results: " + sampleData.sampleType.ToString());
-                        QuestController.instance.SendSample(sampleData);
-                    }
-                    break;
+                    case (RoverAction.Sample):
+                        {
+                            sampleData.sampled = true;
+                            UIController.instance.ChangeTempText("Sample Results: " + sampleData.sampleType.ToString());
+                            QuestController.instance.SendSample(sampleData);
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                UIController.instance.ChangeTempText("");
             }
         }
     }
@@ -428,10 +460,12 @@ public class RoverController : MonoBehaviour
         if (other.GetComponent<SampleData>())
         {
             sampleData = null;
+            UIController.instance.ChangeTempText("");
         }
         if (other.GetComponent<RepairData>())
         {
             repairData = null;
+            UIController.instance.ChangeTempText("");
         }
     }
 

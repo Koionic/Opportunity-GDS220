@@ -41,11 +41,14 @@ public class QuestController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
+        if (SceneController.instance != null)
         {
-            if (mainQuest != null)
+            if (SceneController.instance.CurrentSceneIs(SceneController.CurrentScene.Game))
             {
-                mainQuest.QuestUpdate();
+                if (mainQuest != null)
+                {
+                    mainQuest.QuestUpdate();
+                }
             }
         }
     }
@@ -59,6 +62,17 @@ public class QuestController : MonoBehaviour
             mainQuests[i].questData.isActive = false;
             mainQuests[i].questData.isCompleted = false;
             mainQuests[i].questData.success = false;
+        }
+
+        RepairData[] repairDatas = FindObjectsOfType<RepairData>();
+        foreach (RepairData data in repairDatas)
+        {
+            data.repaired = false;
+        }
+        SampleData[] sampleDatas = FindObjectsOfType<SampleData>();
+        foreach (SampleData data in sampleDatas)
+        {
+            data.sampled = false;
         }
     }
 

@@ -15,6 +15,19 @@ MonoBehaviour:
   repairedMesh: {fileID: 4300000, guid: 812949c4a00c9164c9433b6ec0bc3aea, type: 3}
   repaired: 0
   repairTime: 3
+--- !u!65 &2013893419
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231429151}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.59829384, y: 1.6178477, z: 0.69759315}
+  m_Center: {x: -0.019453108, y: -0.4754882, z: -0.06700837}
 --- !u!1 &7841942597696466311
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,6 +39,7 @@ GameObject:
   - component: {fileID: 3796404260391781949}
   - component: {fileID: 5268919451769156962}
   - component: {fileID: 1761942128715145050}
+  - component: {fileID: 2013893418}
   m_Layer: 0
   m_Name: HomeBase
   m_TagString: HomeBase
@@ -93,6 +107,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &2013893418
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7841942597696466311}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300000, guid: 8865d0e964ac05142a03c9c7f84f265a, type: 3}
 --- !u!1001 &231396031
 PrefabInstance:
   m_ObjectHideFlags: 0
