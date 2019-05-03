@@ -48,11 +48,13 @@ public class GameController : MonoBehaviour
         QuestController.instance.StartNewMainQuest();
     }
 
-    void RestartGame()
+    public void RestartGame()
     {
+        GameController.instance.Resume();
         LoadingController.instance.StartFakeLoadingScreen();
         QuestController.instance.ResetAllMainQuests();
         PrepareRover();
+        UIController.instance.DeleteNewPhoto();
         UIController.instance.DisableCompassUI();
         DialogueController.instance.ResetStreams();
     }
@@ -122,7 +124,7 @@ public class GameController : MonoBehaviour
 
         if (quickSaveReady)
         {
-            Save();
+            //Save();
         }
     }
 
@@ -158,6 +160,7 @@ public class GameController : MonoBehaviour
 
         roverController = RoverController.instance;
         roverController.gameObject.transform.position = spawnPoint;
+        roverController.gameObject.transform.rotation = Quaternion.Euler(Vector3.zero);
 
         roverController.ToggleCameraMode(false);
 

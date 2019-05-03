@@ -33,18 +33,17 @@ public class Quest : ScriptableObject
         questData.isActive = true;
 
 
-            if (startQuestText != null)
-            {
+        if (startQuestText != null)
+        {
             if (tutorialQuest && !UIController.instance.groundControlEnabled)
             {
                 UIController.instance.ShowRoverLog(startQuestText);
             }
             else
             {
-                Debug.Log("queuing start text");
                 DialogueController.instance.QueueGCDialogue(startQuestText);
             }
-            }
+        }
     }
 
     public virtual void QuestUpdate()

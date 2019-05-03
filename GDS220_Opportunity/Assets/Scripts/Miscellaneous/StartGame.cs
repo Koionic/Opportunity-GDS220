@@ -6,7 +6,7 @@ public class StartGame : MonoBehaviour
 {
     private void Start()
     {
-        SceneController.instance.MainMenu();
+        SceneController.instance.GameScene();
         Destroy(this);
     }
 }

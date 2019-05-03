@@ -181,8 +181,6 @@ public class PhotoCamera : MonoBehaviour
             {
                 bool correct = targetInView && targetInRange && !targetObscured;
 
-                print(correct);
-
                 Texture2D photo = renderResult;
 
                 photo.Apply();

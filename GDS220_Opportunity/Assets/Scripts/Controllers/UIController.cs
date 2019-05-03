@@ -216,11 +216,8 @@ public class UIController : MonoBehaviour
                 UpdateCompassHUD(typeof(SampleQuest));
                 UpdateCompassHUD(typeof(RepairQuest));
             }
-            print("ground control enabled " + groundControlEnabled);
             GCtrlSMdia.gameObject.SetActive(groundControlEnabled);
-            print("ground control on " + groundControlOn);
             groundControlPanel.SetActive(groundControlOn);
-            print("social media " + socialMediaOn);
             socialMediaPanel.SetActive(socialMediaOn);
 
             progressBar.gameObject.SetActive(roverController.actionInProgress);
@@ -294,17 +291,12 @@ public class UIController : MonoBehaviour
 
     public void ToggleStream()
     {
-        print("toggling");
         if (groundControlEnabled)
         {
-            print("ground is enabled");
             if (groundControlOn)
             {
-                print("ground is on");
                 if (socialMediaEnabled)
-                {
-                    print("social media is on");
-                
+                {  
                     socialMediaOn = true;
                     groundControlOn = false;
 
@@ -355,6 +347,7 @@ public class UIController : MonoBehaviour
         GCtrlSMdia.texture = groundControlNoSocialMedia;
         socialMediaEnabled = false;
         socialMediaOn = false;
+        groundControlOn = true;
     }
 
     public void EnableHomeWaypoint()

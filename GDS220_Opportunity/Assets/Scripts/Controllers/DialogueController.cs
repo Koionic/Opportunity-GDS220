@@ -24,7 +24,7 @@ public class DialogueController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GrabTextFromFile("/SocialMediaDialogue/TestDialogue", dialogueStrings);
+        //GrabTextFromFile("/SocialMediaDialogue/TestDialogue", dialogueStrings);
     }
 
     // Update is called once per frame
@@ -39,7 +39,7 @@ public class DialogueController : MonoBehaviour
     void GrabTextFromFile(string dataPath, List<string> dialogueArray)
     {
         string path = Application.dataPath + dataPath + ".txt";
-
+        print(path);
         string[] dialogues = File.ReadAllLines(path);
 
         if (dialogues.Length > 0)
@@ -92,9 +92,9 @@ public class DialogueController : MonoBehaviour
         socialMediaStream.ClearStream();
         groundControlStream.ClearStream();
 
-        GrabTextFromFile("/SocialMediaDialogue/Dialogue01", dialogueStrings);
-
-        UIController.instance.DisableGroundControl();
         UIController.instance.DisableSocialMedia();
+        UIController.instance.DisableGroundControl();
+
+        
     }
 }

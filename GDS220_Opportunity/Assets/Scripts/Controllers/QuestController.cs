@@ -78,7 +78,6 @@ public class QuestController : MonoBehaviour
 
     public void StartNewMainQuest()
     {
-        Debug.Log("starting quest");
         for (int i = 0; i < mainQuests.Length; i++)
         {
             if (!mainQuests[i].questData.isCompleted && QuestTypeIsAvailable(mainQuests[i].GetType()))
@@ -146,6 +145,11 @@ public class QuestController : MonoBehaviour
             if (completedQuest.GetType() == typeof(RepairQuest))
             {
                 UIController.instance.EnableGroundControl();
+                if (UIController.instance.socialMediaEnabled)
+                {
+                    print("social media on");
+                    DialogueController.instance.QueueWholeTextFileToSC("/SocialMediaDialogue/Dialogue01");
+                }
             }
             if (completedQuest.GetType() == typeof(SampleQuest))
             {
