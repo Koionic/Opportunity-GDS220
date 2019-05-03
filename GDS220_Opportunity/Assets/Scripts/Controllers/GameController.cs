@@ -51,10 +51,10 @@ public class GameController : MonoBehaviour
     void RestartGame()
     {
         LoadingController.instance.StartFakeLoadingScreen();
+        QuestController.instance.ResetAllMainQuests();
         PrepareRover();
         UIController.instance.DisableCompassUI();
         DialogueController.instance.ResetStreams();
-        QuestController.instance.ResetAllMainQuests();
     }
 
     void EndLevel()

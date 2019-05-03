@@ -278,18 +278,26 @@ public class RoverController : MonoBehaviour
             case (RoverAction.Repair):
                 while (true)
                 {
-                    actionProgress += Time.deltaTime;
-                    float percent = Mathf.InverseLerp(0f, repairData.repairTime, actionProgress);
-
-                    if (UIController.instance != null)
+                    if (repairData != null)
                     {
-                        UIController.instance.UpdateProgressBar(percent);
-                        UIController.instance.ChangeTempText("Reparing...");
+                        actionProgress += Time.deltaTime;
+                        float percent = Mathf.InverseLerp(0f, repairData.repairTime, actionProgress);
+
+                        if (UIController.instance != null)
+                        {
+                            UIController.instance.UpdateProgressBar(percent);
+                            UIController.instance.ChangeTempText("Reparing...");
+                        }
+
+                        if (Input.GetMouseButtonUp(1) || percent >= .99f)
+                        {
+                            FinishAction(roverAction, percent >= .99f);
+                            yield break;
+                        }
                     }
-
-                    if (Input.GetMouseButtonUp(1) || percent >= .99f)
+                    else
                     {
-                        FinishAction(roverAction, percent >= .99f);
+                        FinishAction(roverAction, false);
                         yield break;
                     }
                     yield return null;
@@ -299,17 +307,25 @@ public class RoverController : MonoBehaviour
                 while (true)
                 {
                     actionProgress += Time.deltaTime;
-                    float percent = Mathf.InverseLerp(0f, sampleData.sampleTime, actionProgress);
-
-                    if (UIController.instance != null)
+                    if (sampleData != null)
                     {
-                        UIController.instance.UpdateProgressBar(percent);
-                        UIController.instance.ChangeTempText("Sampling...");
+                        float percent = Mathf.InverseLerp(0f, sampleData.sampleTime, actionProgress);
+
+                        if (UIController.instance != null)
+                        {
+                            UIController.instance.UpdateProgressBar(percent);
+                            UIController.instance.ChangeTempText("Sampling...");
+                        }
+
+                        if (Input.GetMouseButtonUp(0) || percent >= .99f)
+                        {
+                            FinishAction(roverAction, percent >= .99f);
+                            yield break;
+                        }
                     }
-
-                    if (Input.GetMouseButtonUp(0) || percent >= .99f)
+                    else
                     {
-                        FinishAction(roverAction, percent >= .99f);
+                        FinishAction(roverAction, false);
                         yield break;
                     }
                     yield return null;
