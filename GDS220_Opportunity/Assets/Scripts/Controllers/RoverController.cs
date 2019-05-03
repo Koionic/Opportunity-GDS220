@@ -245,18 +245,15 @@ public class RoverController : MonoBehaviour
         }
         else
         {
-            if (GameController.instance != null)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (GameController.instance.IsPaused())
+                if (GameController.instance != null)
                 {
-                    if (Input.GetKeyDown(KeyCode.P))
+                    if (GameController.instance.IsPaused())
                     {
                         GameController.instance.Resume();
                     }
-                }
-                else
-                {
-                    if (Input.GetKeyDown(KeyCode.P))
+                    else
                     {
                         GameController.instance.Pause();
                     }

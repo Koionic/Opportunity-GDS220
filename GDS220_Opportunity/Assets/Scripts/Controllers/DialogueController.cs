@@ -87,6 +87,9 @@ public class DialogueController : MonoBehaviour
         socialMediaStream.ClearStream();
         groundControlStream.ClearStream();
 
-        GrabTextFromFile("/SocialMediaDialogue/TestDialogue", dialogueStrings);
+        GrabTextFromFile("/SocialMediaDialogue/Dialogue01", dialogueStrings);
+
+        UIController.instance.DisableGroundControl();
+        UIController.instance.DisableSocialMedia();
     }
 }
