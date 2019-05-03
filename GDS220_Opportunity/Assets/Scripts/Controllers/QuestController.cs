@@ -153,7 +153,14 @@ public class QuestController : MonoBehaviour
             }
 
             UIController.instance.HideTutorialText();
-            UIController.instance.ShowRoverLog(completedQuest.succeedQuestText);
+            if (UIController.instance.groundControlEnabled)
+            {
+                DialogueController.instance.QueueGCDialogue(completedQuest.succeedQuestText);
+            }
+            else
+            {
+                UIController.instance.ShowRoverLog(completedQuest.succeedQuestText);
+            }
 
             Invoke("HideRoverLog", 2f);
         }

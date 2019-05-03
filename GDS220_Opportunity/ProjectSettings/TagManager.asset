@@ -19,8 +19,8 @@ TagManager:
   - 
   - 
   - Car
-  - 
-  - 
+  - Player
+  - Singleton
   - 
   - 
   - 

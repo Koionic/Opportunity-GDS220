@@ -38,7 +38,6 @@ public class RoverController : MonoBehaviour
     public UnityEvent OutOfBattery;
 
     public bool compassActive = false;
-    public bool groundControlActive = false;
 
     public bool freezeMovement = true;
     public bool freezeInPlace = true;
@@ -230,7 +229,7 @@ public class RoverController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab) && groundControlActive)
+        if (Input.GetKeyDown(KeyCode.Tab) && UIController.instance.groundControlEnabled)
         {
             UIController.instance.ToggleStream();
         }

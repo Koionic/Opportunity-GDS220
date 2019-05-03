@@ -24,14 +24,7 @@ public class DialogueController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string path = Application.dataPath + "/SocialMediaDialogue/TestDialogue.txt";
-
         GrabTextFromFile("/SocialMediaDialogue/TestDialogue", dialogueStrings);
-
-        if (dialogueStrings.Count > 0)
-        {
-            ChooseRandomText();
-        }
     }
 
     // Update is called once per frame
@@ -55,6 +48,18 @@ public class DialogueController : MonoBehaviour
             {
                 dialogueArray.Add(dialogues[i]);
             }
+        }
+
+    }
+
+    public void QueueWholeTextFileToSC(string dataPath)
+    {
+        List<string> tempDialogue = new List<string>();
+        GrabTextFromFile(dataPath, tempDialogue);
+
+        for (int i = 0; i < tempDialogue.Count; i++)
+        {
+            QueueSMDialogue(tempDialogue[i]);
         }
 
     }

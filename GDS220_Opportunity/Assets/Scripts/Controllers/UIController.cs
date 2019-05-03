@@ -74,6 +74,7 @@ public class UIController : MonoBehaviour
     [SerializeField]
     Texture2D socialMediaSelected, groundControlSelected, groundControlNoSocialMedia;
 
+    public bool groundControlEnabled, socialMediaEnabled;
     bool groundControlOn, socialMediaOn;
 
     [SerializeField] 
@@ -215,6 +216,12 @@ public class UIController : MonoBehaviour
                 UpdateCompassHUD(typeof(SampleQuest));
                 UpdateCompassHUD(typeof(RepairQuest));
             }
+            print("ground control enabled " + groundControlEnabled);
+            GCtrlSMdia.gameObject.SetActive(groundControlEnabled);
+            print("ground control on " + groundControlOn);
+            groundControlPanel.SetActive(groundControlOn);
+            print("social media " + socialMediaOn);
+            socialMediaPanel.SetActive(socialMediaOn);
 
             progressBar.gameObject.SetActive(roverController.actionInProgress);
 
@@ -287,19 +294,27 @@ public class UIController : MonoBehaviour
 
     public void ToggleStream()
     {
-        if (groundControlOn)
+        print("toggling");
+        if (groundControlEnabled)
         {
-            if (groundControlPanel.activeSelf && socialMediaOn)
+            print("ground is enabled");
+            if (groundControlOn)
             {
-                socialMediaPanel.SetActive(true);
-                groundControlPanel.SetActive(false);
+                print("ground is on");
+                if (socialMediaEnabled)
+                {
+                    print("social media is on");
+                
+                    socialMediaOn = true;
+                    groundControlOn = false;
 
-                GCtrlSMdia.texture = socialMediaSelected;
+                    GCtrlSMdia.texture = socialMediaSelected;
+                }
             }
-            else if (socialMediaPanel.activeSelf)
+            else if (socialMediaOn)
             {
-                groundControlPanel.SetActive(true);
-                socialMediaPanel.SetActive(false);
+                groundControlOn = true;
+                socialMediaOn = false;
 
                 GCtrlSMdia.texture = groundControlSelected;
             }
@@ -308,15 +323,16 @@ public class UIController : MonoBehaviour
 
     public void EnableGroundControl()
     {
-        if (groundControlOn)
+        if (groundControlEnabled)
         {
-            if (!socialMediaOn)
+            if (!socialMediaEnabled)
             {
                 EnableSocialMedia();
             }
         }
         else
         {
+            groundControlEnabled = true;
             groundControlOn = true;
             GCtrlSMdia.gameObject.SetActive(true);
         }
@@ -324,19 +340,20 @@ public class UIController : MonoBehaviour
 
     public void DisableGroundControl()
     {
+        groundControlEnabled = false;
         groundControlOn = false;
-        GCtrlSMdia.gameObject.SetActive(false);
     }
 
     public void EnableSocialMedia()
     {
         GCtrlSMdia.texture = groundControlSelected;
-        socialMediaOn = true;
+        socialMediaEnabled = true;
     }
 
     public void DisableSocialMedia()
     {
         GCtrlSMdia.texture = groundControlNoSocialMedia;
+        socialMediaEnabled = false;
         socialMediaOn = false;
     }
 
